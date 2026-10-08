@@ -415,6 +415,7 @@ function reset(){AudioEngine.init();AudioEngine.event('start');AudioEngine.updat
 // Seuls les effets visuels et le coût du rendu peuvent être réduits si le navigateur ralentit.
 const coarsePointer=!!window.matchMedia?.('(pointer: coarse)').matches;
 const safariBrowser=/Safari\//.test(navigator.userAgent)&&!/Chrome|Chromium|CriOS|Edg|OPR|FxiOS/.test(navigator.userAgent);
+document.body.classList.toggle('safari-browser',safariBrowser);
 const reducedMotionQuery=window.matchMedia?.('(prefers-reduced-motion: reduce)');
 let motionReduced=!!reducedMotionQuery?.matches;
 reducedMotionQuery?.addEventListener?.('change',e=>{motionReduced=!!e.matches;document.body.dataset.reducedMotion=motionReduced?'true':'false';resize();});
@@ -447,7 +448,7 @@ function applyPerformanceTier(tier){
  if(tier===3){p.renderEvery=1;p.effectEvery=1;p.trailMax=150;p.dprCap=1.25}
  else if(tier===2){p.renderEvery=1;p.effectEvery=1;p.trailMax=120;p.dprCap=1.15}
  else if(tier===1){p.renderEvery=1;p.effectEvery=2;p.trailMax=90;p.dprCap=1}
- else {p.renderEvery=1;p.effectEvery=3;p.trailMax=60;p.dprCap=1}
+ else {p.renderEvery=2;p.effectEvery=3;p.trailMax=60;p.dprCap=1}
 }
 function updatePerformance(rawDt){
  const p=performanceState;
@@ -477,7 +478,20 @@ function visualQuality(){
 
 let resizeFrame=0,lastCanvasW=0,lastCanvasH=0,lastDpr=0;function resize(){cancelAnimationFrame(resizeFrame);resizeFrame=requestAnimationFrame(()=>{const r=canvas.getBoundingClientRect(),d=Math.min(devicePixelRatio||1,performanceState.dprCap),w=Math.max(1,Math.round(r.width*d)),h=Math.max(1,Math.round(r.height*d));if(w===lastCanvasW&&h===lastCanvasH&&d===lastDpr&&Math.abs(S-r.width)<.5)return;lastCanvasW=w;lastCanvasH=h;lastDpr=d;canvas.width=w;canvas.height=h;backgroundCacheKey='';S=r.width;ctx.setTransform(d,0,0,d,0,0)})}window.addEventListener('resize',resize,{passive:true});window.addEventListener('orientationchange',()=>setTimeout(resize,180),{passive:true});window.visualViewport?.addEventListener('resize',resize,{passive:true});window.visualViewport?.addEventListener('scroll',resize,{passive:true});
 function blocked(x,y){const r=.022;if(x<r||x>1-r||y<r||y>1-r)return true;return maps[n].some(a=>x+r>a[0]&&x-r<a[0]+a[2]&&y+r>a[1]&&y-r<a[1]+a[3])}
-function move(a,dx,dy,dt,s=.38){const mag=Math.hypot(dx,dy);if(mag>1){dx/=mag;dy/=mag}const targetX=dx*s*1.08,targetY=dy*s*1.08,dot=velocity.x*targetX+velocity.y*targetY,response=mag<.08?20:dot<0?26:18,blend=1-Math.exp(-response*Math.min(dt,.05));velocity.x+=(targetX-velocity.x)*blend;velocity.y+=(targetY-velocity.y)*blend;const vmax=s*1.08,vm=Math.hypot(velocity.x,velocity.y);if(vm>vmax){velocity.x=velocity.x/vm*vmax;velocity.y=velocity.y/vm*vmax}let nx=a.x+velocity.x*dt,ny=a.y+velocity.y*dt;if(!blocked(nx,a.y))a.x=nx;else velocity.x=0;if(!blocked(a.x,ny))a.y=ny;else velocity.y=0;a.x=Math.max(.035,Math.min(.965,a.x));a.y=Math.max(.035,Math.min(.965,a.y))}
+function move(a,dx,dy,dt,s=.38){
+ const mag=Math.hypot(dx,dy);if(mag>1){dx/=mag;dy/=mag}
+ // Preserve real movement time on slow Safari frames while checking collisions in small steps.
+ const steps=Math.max(1,Math.ceil(dt/.025)),stepDt=dt/steps;
+ for(let i=0;i<steps;i++){
+  const targetX=dx*s*1.08,targetY=dy*s*1.08,dot=velocity.x*targetX+velocity.y*targetY,response=mag<.08?20:dot<0?26:18,blend=1-Math.exp(-response*Math.min(stepDt,.05));
+  velocity.x+=(targetX-velocity.x)*blend;velocity.y+=(targetY-velocity.y)*blend;
+  const vmax=s*1.08,vm=Math.hypot(velocity.x,velocity.y);if(vm>vmax){velocity.x=velocity.x/vm*vmax;velocity.y=velocity.y/vm*vmax}
+  const nx=a.x+velocity.x*stepDt,ny=a.y+velocity.y*stepDt;
+  if(!blocked(nx,a.y))a.x=nx;else velocity.x=0;
+  if(!blocked(a.x,ny))a.y=ny;else velocity.y=0;
+ }
+ a.x=Math.max(.035,Math.min(.965,a.x));a.y=Math.max(.035,Math.min(.965,a.y))
+}
 const NAV_MIN=.035,NAV_STEP=.03,NAV_SIZE=32,NAV_COUNT=NAV_SIZE*NAV_SIZE;
 let navigation={goal:-1,goalTarget:null,path:[],index:0,repathIn:0,avoidId:-1,avoidTarget:null,stalledFor:0,lastPosition:null};
 function navId(x,y){const ix=Math.max(0,Math.min(NAV_SIZE-1,Math.round((x-NAV_MIN)/NAV_STEP))),iy=Math.max(0,Math.min(NAV_SIZE-1,Math.round((y-NAV_MIN)/NAV_STEP)));return iy*NAV_SIZE+ix}
@@ -684,7 +698,7 @@ function v7Behavior(dt){
 }
 
 function distExit(a,e){return Math.hypot(a.x-e[0],a.y-e[1])}
-function loop(t){if(!running)return;requestAnimationFrame(loop);if(paused){last=t;return}const rawDt=Math.max(0,(t-last)/1000);updatePerformance(rawDt);let dt=Math.min(rawDt,.05);last=t;if(state.narrativeCueCooldown>0)state.narrativeCueCooldown=Math.max(0,state.narrativeCueCooldown-dt);if(state.metaCueCooldown>0)state.metaCueCooldown=Math.max(0,state.metaCueCooldown-dt);move(p,input.x,input.y,dt);if(Math.hypot(input.x,input.y)>.18)AudioEngine.move();state.ambientTimer=(state.ambientTimer||0)+dt;if(state.ambientTimer>=.10){state.ambientTimer=0;AudioEngine.updateAmbient();AudioEngine.contextTick();}state.trailTimer=(state.trailTimer||0)+dt;if(state.trailTimer>=.045){state.trailTimer=0;const lastTrail=trail[trail.length-1];if(!lastTrail||Math.hypot(p.x-lastTrail.x,p.y-lastTrail.y)>.0025){trail.push({x:p.x,y:p.y});if(trail.length>performanceState.trailMax)trail.shift();}}other(dt);const worldDt=(state.worldLogicAccumulator||0)+dt;if(!safariBrowser||worldDt>=.066){reactWorld(worldDt);state.worldLogicAccumulator=0}else state.worldLogicAccumulator=worldDt;state.animationTime+=dt;state.animationMotion=state.animationMotion*.82+Math.hypot(input.x,input.y)*.18;if(state.messageTimer>0){state.messageTimer-=dt;if(state.messageTimer<=0){thought.textContent='';thought.classList.remove('thought-alert')}}if((state.renderFrame=(state.renderFrame||0)+1)>=performanceState.renderEvery){state.renderFrame=0;draw()}let e=exits[n];let requiresOther=n!==33;let reachedExit=distExit(p,e)<.055&&(!requiresOther||distExit(o,e)<.055);if(objectiveSatisfied()){if(!state.objectiveComplete){state.objectiveComplete=true;if(!mem.completedObjectives.includes(n))mem.completedObjectives.push(n);AudioEngine.event('signal');signal('OBJECTIF ATTEINT')} }updateObjectiveHUD();let canExit=objectiveSatisfied();if(reachedExit&&canExit){running=false;finish()}else if(reachedExit&&!canExit&&state.exitHint!==true){state.exitHint=true;signal('OBJECTIF NON TERMINÉ');say(levelDesign[n][2],true)}else if(!paused){} }
+function loop(t){if(!running)return;requestAnimationFrame(loop);if(paused){last=t;return}const rawDt=Math.max(0,(t-last)/1000);updatePerformance(rawDt);let dt=Math.min(rawDt,.20);last=t;if(state.narrativeCueCooldown>0)state.narrativeCueCooldown=Math.max(0,state.narrativeCueCooldown-dt);if(state.metaCueCooldown>0)state.metaCueCooldown=Math.max(0,state.metaCueCooldown-dt);move(p,input.x,input.y,dt);if(Math.hypot(input.x,input.y)>.18)AudioEngine.move();state.ambientTimer=(state.ambientTimer||0)+dt;if(state.ambientTimer>=.10){state.ambientTimer=0;AudioEngine.updateAmbient();AudioEngine.contextTick();}state.trailTimer=(state.trailTimer||0)+dt;if(state.trailTimer>=.045){state.trailTimer=0;const lastTrail=trail[trail.length-1];if(!lastTrail||Math.hypot(p.x-lastTrail.x,p.y-lastTrail.y)>.0025){trail.push({x:p.x,y:p.y});if(trail.length>performanceState.trailMax)trail.shift();}}other(dt);const worldDt=(state.worldLogicAccumulator||0)+dt;if(!safariBrowser||worldDt>=.066){reactWorld(worldDt);state.worldLogicAccumulator=0}else state.worldLogicAccumulator=worldDt;state.animationTime+=dt;state.animationMotion=state.animationMotion*.82+Math.hypot(input.x,input.y)*.18;if(state.messageTimer>0){state.messageTimer-=dt;if(state.messageTimer<=0){thought.textContent='';thought.classList.remove('thought-alert')}}if((state.renderFrame=(state.renderFrame||0)+1)>=performanceState.renderEvery){state.renderFrame=0;draw()}let e=exits[n];let requiresOther=n!==33;let reachedExit=distExit(p,e)<.055&&(!requiresOther||distExit(o,e)<.055);if(objectiveSatisfied()){if(!state.objectiveComplete){state.objectiveComplete=true;if(!mem.completedObjectives.includes(n))mem.completedObjectives.push(n);AudioEngine.event('signal');signal('OBJECTIF ATTEINT')} }updateObjectiveHUD();let canExit=objectiveSatisfied();if(reachedExit&&canExit){running=false;finish()}else if(reachedExit&&!canExit&&state.exitHint!==true){state.exitHint=true;signal('OBJECTIF NON TERMINÉ');say(levelDesign[n][2],true)}else if(!paused){} }
 function endingProfile(){
  const r=relation(),p=mem.personality||defaultMemory.personality,h=mem.habits||defaultMemory.habits,mm=mem.metaMemory||defaultMemory.metaMemory;
  const meta=(mm.discovered||[]).length, secrets=mem.secrets||0;

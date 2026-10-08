@@ -178,3 +178,13 @@ button{min-height:44px}
  #menu .ghost{min-height:28px;margin-top:0;padding:5px 12px}
  #menu>small{display:none}
 }
+
+/* Safari performance: avoid repeatedly compositing blurred HUD layers over the live canvas. */
+body.safari-browser #board{filter:none}
+body.safari-browser canvas{box-shadow:none}
+body.safari-browser .hud,
+body.safari-browser #objectivePanel,
+body.safari-browser .memory-card,
+body.safari-browser .pauseCard{backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
+body.safari-browser #app:before,
+body.safari-browser #app:after{filter:none;opacity:.06}
