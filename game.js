@@ -615,7 +615,7 @@ class OtherBrain {
   if(this.decisionTimer<=0){this.decisionTimer=.16;this.choose();const key=this.mode.toLowerCase();mem.behaviorMemory[key]=(mem.behaviorMemory[key]||0)+.06;if(this.mode==='WAIT')learnHabit('waiting',.004);if(this.mode==='FOLLOW')learnHabit('proximity',.003);if(this.mode==='OBSERVE')learnHabit('repetition',.002)}
   const q=this.profile(),d=near(p,o),mp=memoryProfile(),speed=.24+.16*q.attachment+.08*q.independence;
   if(this.mode==='FOLLOW'){go({x:p.x,y:p.y},dt,speed);}
-  else if(this.mode==='WAIT'){if(d>.13)go({x:o.x+(p.x-o.x)*.18,y:o.y+(p.y-o.y)*.18},dt,speed*.55);}
+  else if(this.mode==='WAIT'){if(d>.13){const target=navClear(o,p)?{x:o.x+(p.x-o.x)*.18,y:o.y+(p.y-o.y)*.18}:p;go(target,dt,speed*.55);}}
   else if(this.mode==='OBSERVE'){const side=q.unpredictability>.5?{x:1-p.x,y:1-p.y}:{x:p.x,y:p.y};go(side,dt,speed*.48);}
   else if(this.mode==='INTERCEPT'){const lead=1.8+this.playerSpeed*1.8;const tx=this.clamp(p.x+(p.x-this.lastPlayer.x)*lead,.05,.95),ty=this.clamp(p.y+(p.y-this.lastPlayer.y)*lead,.05,.95);go({x:tx,y:ty},dt,speed*.95);}
   else if(this.mode==='RETURN'){go({x:.5,y:.5},dt,speed*.72);if(d<.18)go(p,dt,speed*.7);}
