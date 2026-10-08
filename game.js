@@ -629,7 +629,7 @@ class OtherBrain {
   if(this.decisionTimer<=0){this.decisionTimer=.16;this.choose();const key=this.mode.toLowerCase();mem.behaviorMemory[key]=(mem.behaviorMemory[key]||0)+.06;if(this.mode==='WAIT')learnHabit('waiting',.004);if(this.mode==='FOLLOW')learnHabit('proximity',.003);if(this.mode==='OBSERVE')learnHabit('repetition',.002)}
   // Chapter 3's hesitation objective should bring the Other back toward the player.
   // Once it is complete, keep the return behavior predictable so the exit stays reachable.
-  if(n===2&&state.objectiveComplete)this.mode='FOLLOW';
+  if(n>=1&&n<=3&&state.objectiveComplete)this.mode='FOLLOW';
   const q=this.profile(),d=near(p,o),mp=memoryProfile(),speed=.24+.16*q.attachment+.08*q.independence;
   if(this.mode==='FOLLOW'){go({x:p.x,y:p.y},dt,speed);}
   else if(this.mode==='WAIT'){if(d>.13){const target=navClear(o,p)?{x:o.x+(p.x-o.x)*.18,y:o.y+(p.y-o.y)*.18}:p;go(target,dt,speed*.55);}}
