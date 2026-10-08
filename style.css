@@ -1,0 +1,165 @@
+*{box-sizing:border-box}:root{--bg:#05060a;--panel:#0d1017;--line:#252b35;--text:#eef2f1;--muted:#78828b;--green:#8ff0ba;--red:#ff7d88;--blue:#a9b7ff;--violet:#c7b8ff;--cyan:#8de7e5}
+html,body{margin:0;width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(--text);font-family:Inter,system-ui,-apple-system,sans-serif;touch-action:none}body{display:flex;justify-content:center}button{font:inherit;cursor:pointer}#app{width:100%;max-width:720px;height:100%;position:relative;background:radial-gradient(circle at 50% 24%,#18181e,#09090c 62%)}
+.screen{position:absolute;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;padding:24px}.screen.active{display:flex}.eyebrow{font-size:9px;letter-spacing:.25em;color:#625e67;margin-bottom:18px}.brand{font-size:clamp(34px,10vw,64px);font-weight:800;letter-spacing:-.065em;line-height:.94;text-align:center}.brand span{font-weight:300}.brand.small{font-size:clamp(25px,7vw,44px)}
+.tagline{text-align:center;color:var(--muted);line-height:1.6;margin:25px 0 20px}.tagline b{color:#d8d3d7;font-weight:500}.memory-card{width:min(330px,88vw);padding:13px 15px;border:1px solid #211f26;background:#0e0e13;border-radius:14px;text-align:left;margin-bottom:25px}.memory-card span{display:block;font-size:9px;letter-spacing:.16em;color:var(--green)}.memory-card i{display:block;font-size:11px;color:#65616a;font-style:normal;margin-top:5px}.primary,.secondary,.ghost{min-width:210px;padding:15px 25px;border-radius:999px;font-weight:800;letter-spacing:.13em;border:0}.primary{background:#f4f1f3;color:#09090c}.secondary{margin-top:12px;background:transparent;border:1px solid var(--line);color:var(--muted)}.ghost{margin-top:9px;background:transparent;color:#4f4b54;font-size:9px;min-width:auto;padding:8px 14px;letter-spacing:.12em}.ghost:hover{color:#8c8790}.screen>small{position:absolute;bottom:18px;color:#454149;letter-spacing:.08em;font-size:9px}
+.hud{position:absolute;top:0;left:0;right:0;height:72px;padding:8px 10px;display:grid;grid-template-columns:52px 1fr 52px 52px 52px;align-items:center;z-index:3;text-align:center}.hud b{display:block;font-size:9px;letter-spacing:.18em;color:#77727b}.hud strong{display:block;font-size:13px;margin-top:3px}.icon{width:42px;height:42px;border-radius:50%;background:#15151b;border:1px solid var(--line);font-size:25px;color:#bbb;justify-self:center}.relation{grid-column:3;grid-row:1;justify-self:end;margin-right:3px;text-align:right;line-height:1}.relation span{display:block;color:#5f5a64;font-size:7px;letter-spacing:.12em}.relation em{font-style:normal;font-size:11px;color:#aaa5ad}.hud .icon:nth-last-child(2){grid-column:4}.hud .icon:last-child{grid-column:5}
+#thought{position:absolute;top:77px;left:55px;right:55px;text-align:center;z-index:4;color:#aaa4ad;font-size:11px;min-height:32px;transition:opacity .2s}.thought-alert{color:#d7a3a8!important}#signal{position:absolute;top:110px;left:50%;transform:translateX(-50%);z-index:4;font-size:8px;letter-spacing:.18em;color:#4c4850;opacity:0;transition:opacity .3s}.signal-on{opacity:1!important}
+#board{width:min(92vw,620px);aspect-ratio:1;max-height:60vh}canvas{display:block;width:100%;height:100%;border:1px solid #26242c;border-radius:24px;background:#0d0d12;box-shadow:0 18px 60px #0008}.controls{position:absolute;bottom:16px;left:0;right:0;height:145px;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:8px}.controls span{font-size:10px;color:#55515a;letter-spacing:.08em}.controls #controlTip{font-size:8px;color:#3f3b43;letter-spacing:.04em;margin-top:-3px;opacity:.8}#joy{width:108px;height:108px;border-radius:50%;background:#15151b;border:1px solid #292831;position:relative;box-shadow:inset 0 0 30px #0008}#knob{position:absolute;width:46px;height:46px;left:30px;top:30px;border-radius:50%;background:#ddd9dd;box-shadow:0 4px 18px #0008}.ending-stats{width:min(350px,90vw);display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:0 0 25px}.stat{background:#111116;border:1px solid #232129;border-radius:10px;padding:9px 4px;text-align:center}.stat b{display:block;font-size:15px}.stat span{font-size:7px;color:#625e67;letter-spacing:.1em}.stat.green b{color:var(--green)}.stat.red b{color:var(--red)}.stat.blue b{color:var(--blue)}#winText{max-width:330px;text-align:center;color:var(--muted);line-height:1.6;margin:18px 0 20px}
+@media(max-height:650px){#board{max-height:53vh}.controls{height:95px}.controls span{display:none}#joy{width:82px;height:82px}#knob{width:38px;height:38px;left:21px;top:21px}.memory-card{margin-bottom:15px}.tagline{margin:14px 0}.eyebrow{margin-bottom:10px}}
+
+/* V7 narrative polish */
+#signal{pointer-events:none;letter-spacing:.18em}
+#worldStatus{font-size:9px;letter-spacing:.16em;opacity:.58}
+.ending-stats{gap:10px}
+
+#chapterHint{position:absolute;left:50%;top:92px;transform:translateX(-50%);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:#777;opacity:.8;pointer-events:none;text-align:center;white-space:nowrap}
+@media(max-width:520px){#chapterHint{top:88px;font-size:8px;max-width:90vw;white-space:normal}}
+
+#pauseOverlay{position:absolute;inset:0;z-index:20;display:none;align-items:center;justify-content:center;background:#050507cc;backdrop-filter:blur(10px)}#pauseOverlay.active{display:flex}.pauseCard{width:min(330px,86vw);padding:28px 22px;border:1px solid #29272f;border-radius:22px;background:#101015;box-shadow:0 20px 80px #000c;text-align:center}.pauseTitle{font-size:32px;font-weight:800;letter-spacing:-.04em}.pauseCard p{color:#77727b;font-size:12px;line-height:1.6;margin:12px 0 22px}.pauseCard .secondary{display:block;width:100%}
+#canvas{will-change:transform}.icon:active,#joy:active{transform:scale(.96)}button{touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+@media(max-width:520px){.hud{grid-template-columns:44px 1fr 46px 44px 44px;padding:8px 5px}.hud .icon{width:38px;height:38px;font-size:20px}.controls{bottom:10px}}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
+
+/* V10 — direction artistique : noir nocturne, verre mat, halo organique */
+#app{background:radial-gradient(circle at 50% 18%,#18212a 0,#0a0e14 35%,#05060a 72%);overflow:hidden}
+#app:before,#app:after{content:"";position:absolute;inset:auto;pointer-events:none;z-index:0;border-radius:50%;filter:blur(50px);opacity:.16}
+#app:before{width:260px;height:260px;left:-120px;top:22%;background:var(--green)}
+#app:after{width:220px;height:220px;right:-110px;bottom:24%;background:var(--violet)}
+.screen>*{position:relative;z-index:1}
+.brand{font-weight:750;letter-spacing:-.075em;text-shadow:0 0 35px #dfffe51a}.brand span{color:#aeb7b7}
+.eyebrow{color:#6e7b82;text-shadow:0 0 14px #8ff0ba12}
+.tagline b{color:#e5ece9}.memory-card,.pauseCard{background:linear-gradient(145deg,#10151bde,#090c12e8);border-color:#26303a;box-shadow:0 18px 70px #0008,inset 0 1px #ffffff08;backdrop-filter:blur(12px)}
+.primary{background:linear-gradient(135deg,#f0f4f2,#cbd5d2);box-shadow:0 8px 30px #d9fff31a}.secondary{border-color:#29323b;background:#0b0f14aa}.ghost{color:#5d6971}
+.hud{background:linear-gradient(#070a0ecf,transparent);backdrop-filter:blur(8px)}.hud b{color:#6e7a82}.hud strong{letter-spacing:.08em}.icon{background:#0e1319d9;border-color:#29333d;color:#b9c1c2;box-shadow:inset 0 1px #fff08}
+#thought{color:#aeb9bc;text-shadow:0 2px 15px #000}.thought-alert{color:#ffabb0!important;text-shadow:0 0 18px #ff66741c}
+#signal{color:#91a0a8;text-shadow:0 0 16px #8de7e533}.signal-on{color:#c9d5d8!important}
+#worldStatus{color:#87939b;text-shadow:0 0 16px #8ff0ba1a}
+#chapterHint{color:#8b969d}
+#board{filter:drop-shadow(0 25px 55px #000b)}canvas{border-color:#27313a;border-radius:28px;background:#080b10;box-shadow:0 0 0 1px #ffffff04,0 25px 80px #000b,inset 0 0 40px #0008}
+.controls{background:linear-gradient(transparent,#05060ad9 28%,#05060a)}#joy{background:radial-gradient(circle at 38% 32%,#263039,#11161c 68%);border-color:#303b44;box-shadow:inset 0 0 35px #000b,0 8px 35px #0007}#knob{background:radial-gradient(circle at 38% 30%,#f6faf8,#bcc6c3);box-shadow:0 5px 22px #000a,0 0 18px #8ff0ba1c}
+.ending-stats .stat{background:#0c1117;border-color:#26303a;box-shadow:inset 0 1px #ffffff06}.stat.green b{color:var(--green)}.stat.red b{color:var(--red)}.stat.blue b{color:var(--blue)}
+#pauseOverlay{background:#020407d9}.pauseTitle{letter-spacing:-.055em}.pauseCard p{color:#7f8a91}
+@media(prefers-reduced-motion:no-preference){.primary,.secondary,.icon,#joy{transition:transform .18s ease,box-shadow .25s ease,border-color .25s ease}.primary:hover{transform:translateY(-1px);box-shadow:0 12px 34px #d9fff329}.secondary:hover,.icon:hover{border-color:#3a4650}.icon:hover{box-shadow:0 0 24px #8de7e50d}}
+
+/* V13 — identité sonore adaptative */
+.audio{position:absolute;right:57px;top:15px;width:38px;height:38px;font-size:17px;z-index:5}
+.audio.muted{color:#59636a;border-color:#202830}
+@media(max-width:520px){.audio{right:51px;top:13px;width:36px;height:36px}}
+
+
+/* V14 — secrets + rejouabilité */
+.stat.violet{border-color:#9b8cff55;box-shadow:0 0 18px #9b8cff12}
+#chapterHint{transition:opacity .25s ease,transform .25s ease}
+
+
+/* V15 — optimisation mobile */
+:root{--safe-top:env(safe-area-inset-top,0px);--safe-right:env(safe-area-inset-right,0px);--safe-bottom:env(safe-area-inset-bottom,0px);--safe-left:env(safe-area-inset-left,0px)}
+body{overscroll-behavior:none;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+#app{min-height:100vh;min-height:100svh;height:-webkit-fill-available;height:100dvh;padding:var(--safe-top) var(--safe-right) var(--safe-bottom) var(--safe-left);box-sizing:border-box}
+.screen{min-height:0}
+#game{height:100%;height:-webkit-fill-available;height:100dvh;box-sizing:border-box}
+#canvas{max-width:100%;max-height:100%;image-rendering:auto}
+#joy{width:clamp(96px,24vw,132px);height:clamp(96px,24vw,132px);margin-left:max(12px,env(safe-area-inset-left));margin-bottom:max(12px,env(safe-area-inset-bottom))}
+.hud{padding-top:max(10px,env(safe-area-inset-top));padding-left:max(10px,env(safe-area-inset-left));padding-right:max(10px,env(safe-area-inset-right))}
+@media (max-height:620px) and (orientation:landscape){.hud{transform:scale(.88);transform-origin:top center}.game-wrap{padding-top:2px}#chapterHint{display:none}#joy{width:82px;height:82px}.panel{padding:12px}}
+@media (max-width:380px){.hud{font-size:.82rem}.button{min-height:42px}.menu-card{padding:18px}.title{font-size:clamp(2rem,11vw,3rem)}}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation-duration:.001ms!important;transition-duration:.001ms!important}}
+
+/* V17 — release candidate : version gelée et compatibilité finale */
+#menu small{max-width:90vw;text-align:center}
+
+/* V18 — direction artistique : matière, profondeur et états du monde */
+#app{isolation:isolate}
+#board{position:relative}
+#board:after{content:"";position:absolute;inset:0;border-radius:28px;pointer-events:none;box-shadow:inset 0 0 55px #0008,inset 0 0 1px #ffffff20;mix-blend-mode:screen;opacity:.7}
+body[data-world="CALME"] #board{box-shadow:0 25px 80px #000b,0 0 38px #74e39a12}
+body[data-world="VIGILANT"] #board{box-shadow:0 25px 80px #000b,0 0 42px #ffb46b12}
+body[data-world="FRACTURÉ"] #board{box-shadow:0 25px 80px #000b,0 0 46px #ff66741c}
+body[data-world="FRACTURÉ"] #worldStatus{color:#ff9ba4;text-shadow:0 0 18px #ff667433}
+body[data-world="CALME"] #worldStatus{color:#9ee8c1}
+@media(prefers-reduced-motion:no-preference){#board{transition:filter .6s ease,box-shadow .6s ease}body[data-world="FRACTURÉ"] #board{animation:worldPulse 3.8s ease-in-out infinite}@keyframes worldPulse{0%,100%{filter:drop-shadow(0 25px 55px #000b)}50%{filter:drop-shadow(0 25px 55px #000b) saturate(1.12)}}}
+
+
+/* V17 — interface finale : HUD mobile, objectif lisible et transitions */
+#objectivePanel{position:absolute;left:50%;top:126px;transform:translateX(-50%);width:min(390px,82vw);padding:9px 12px 10px;border:1px solid #26313a;border-radius:13px;background:linear-gradient(135deg,#0b1117d9,#080c11c7);backdrop-filter:blur(10px);z-index:4;box-shadow:0 10px 35px #0007,inset 0 1px #ffffff06;display:grid;grid-template-columns:1fr auto;grid-template-areas:'label state' 'text text';gap:4px 10px;pointer-events:none}
+#objectivePanel span{grid-area:label;font-size:7px;letter-spacing:.2em;color:#65727a}
+#objectivePanel strong{grid-area:text;font-size:10px;line-height:1.35;color:#b8c2c4;font-weight:550;text-align:left}
+#objectivePanel i{grid-area:state;font-style:normal;font-size:7px;letter-spacing:.13em;color:#78858c;align-self:center}
+#objectivePanel.complete{border-color:#74e39a55;box-shadow:0 0 28px #74e39a0d,inset 0 1px #ffffff06}
+#objectivePanel.complete i{color:#8ff0ba}
+#objectivePanel.complete strong{color:#d8eee1}
+#chapterTransition{position:absolute;inset:0;z-index:30;display:flex;flex-direction:column;align-items:center;justify-content:center;background:radial-gradient(circle at 50% 48%,#172027e8,#05070bd9 62%);opacity:0;visibility:hidden;pointer-events:none;transition:opacity .45s ease,visibility .45s ease}
+#chapterTransition.active{opacity:1;visibility:visible}
+#chapterTransition .transition-eyebrow{font-size:8px;letter-spacing:.28em;color:#718087;margin-bottom:12px}
+#transitionTitle{font-size:clamp(28px,9vw,52px);font-weight:750;letter-spacing:-.055em;text-align:center;text-shadow:0 0 30px #dfffe512}
+#transitionSubtitle{margin-top:10px;max-width:80vw;text-align:center;font-size:10px;line-height:1.5;color:#7e8b91}
+.hud{padding-top:max(10px,env(safe-area-inset-top));}
+@media(max-width:520px){#objectivePanel{top:121px;width:min(360px,86vw);padding:8px 10px}#chapterHint{top:181px;font-size:7px;max-width:82vw;opacity:.55}.hud{height:66px}}
+@media(max-height:650px){#objectivePanel{top:106px;padding:7px 10px}#objectivePanel strong{font-size:9px}#chapterHint{top:159px}.board{max-height:53vh}}
+@media(prefers-reduced-motion:reduce){#chapterTransition{transition:none}}
+
+
+/* PHASE 21 — accessibilité et mobile avancé */
+:focus-visible{outline:2px solid var(--cyan);outline-offset:4px;border-radius:10px}
+button{min-height:44px}
+.icon{min-width:44px;min-height:44px}
+.primary,.secondary{min-height:48px}
+#joy{touch-action:none}
+#canvas{outline:none}
+#controlTip{max-width:88vw;text-align:center;line-height:1.5}
+@media(max-width:380px){.primary,.secondary{min-width:min(210px,86vw)}.hud{grid-template-columns:44px minmax(0,1fr) 44px 44px 44px}.hud strong{font-size:11px}.relation{display:none}.audio{right:49px}}
+@media(max-height:620px) and (orientation:landscape){#board{max-height:50vh}.controls{height:82px}.controls #controlTip{display:none}.hud{height:58px}}
+@media (pointer:coarse){button{min-height:48px}.icon{width:48px;height:48px}.primary,.secondary{padding-block:14px}.ghost{min-height:44px}}
+@media (prefers-contrast:more){:root{--line:#67727b;--muted:#aeb8bd}button,.memory-card,.pauseCard,#objectivePanel,#joy{border-width:2px}.icon{color:#fff}.controls span,#controlTip{color:#c4cdd0!important}}
+@media (forced-colors:active){button,#joy,.memory-card,.pauseCard,#objectivePanel{border:1px solid ButtonText;background:Canvas;color:CanvasText}#knob{background:ButtonText}}
+
+/* PHASE 31 — compatibilité multi-appareils */
+@media (pointer:coarse){#board{width:min(92vw,620px)}#joy{touch-action:none}}
+@media (max-width:380px){.hud{grid-template-columns:40px 1fr 42px 40px 40px}.hud strong{font-size:11px}.relation em{font-size:10px}.objectivePanel{max-width:86vw}}
+@media (min-width:521px) and (max-width:900px){#board{width:min(82vw,620px)}}
+@media (max-height:520px) and (orientation:landscape){#board{width:min(54vh,620px);max-height:54vh}.controls{height:74px;bottom:4px}.controls #joy{width:72px;height:72px}.controls #knob{width:34px;height:34px;left:18px;top:18px}.hud{height:56px;padding-top:max(5px,env(safe-area-inset-top))}.hud strong{font-size:11px}#objectivePanel{top:62px;transform:translateX(-50%) scale(.9);transform-origin:top center}#chapterHint{display:none}}
+@media (prefers-contrast:more){#joy,#knob,.icon{border-width:2px}canvas{border-width:2px}}
+
+
+/* Correctif Safari 18 : les commandes HUD restent distinctes et cliquables. */
+#thought{pointer-events:none}
+.hud{grid-template-columns:44px minmax(0,1fr) repeat(4,44px)}
+.hud #home{grid-column:1;grid-row:1}
+.hud>div:not(.relation){grid-column:2;grid-row:1;min-width:0}
+.hud .relation{grid-column:3;grid-row:1}
+.hud #pause{grid-column:4;grid-row:1}
+.hud #audioToggle{position:static;grid-column:5;grid-row:1;width:42px;height:42px}
+.hud #restart{grid-column:6;grid-row:1}
+@media(max-width:520px){
+  .hud{grid-template-columns:40px minmax(0,1fr) repeat(4,40px)}
+  .hud #audioToggle{position:static;width:38px;height:38px}
+}
+@media(max-width:380px){
+  .hud{grid-template-columns:36px minmax(0,1fr) repeat(4,36px)}
+  .hud .icon{width:36px;height:36px;min-width:36px;min-height:36px}
+  .hud #audioToggle{width:36px;height:36px}
+}
+
+/* Correctif Safari 18.6 — conserve le plateau carré quand la fenêtre est basse. */
+#board{width:min(92vw,620px,60vh);height:auto;max-height:none;aspect-ratio:1}
+@media(max-height:620px) and (orientation:landscape){#board{width:min(54vh,620px,92vw)}}
+
+/* Mobile touch targets: keep the HUD controls at least 44px and prevent overlap. */
+@media(max-width:520px){
+  .hud{grid-template-columns:44px minmax(0,1fr) repeat(4,44px)}
+  .hud .icon,.hud #audioToggle{width:44px;height:44px;min-width:44px;min-height:44px}
+}
+@media(max-width:380px){
+  .hud{grid-template-columns:44px minmax(0,1fr) repeat(3,44px);padding-left:4px;padding-right:4px}
+  .hud .relation{display:none}
+  .hud #pause{grid-column:3}
+  .hud #audioToggle{grid-column:4}
+  .hud #restart{grid-column:5}
+}
+
+/* Clear first-play guidance and a readable personal ending recap */
+.how-to-play{width:min(330px,88vw);padding:11px 14px;margin:-6px 0 14px;border:1px solid #202832;border-radius:12px;background:#0b1015;color:#aab5b8;text-align:left;line-height:1.45}
+.how-to-play b{display:block;margin-bottom:4px;color:#9ee8c1;font-size:8px;letter-spacing:.16em}
+.how-to-play span{display:block;font-size:10px}
+#endingRecap{width:min(390px,90vw);text-align:center;color:#b2c1bf;font-size:12px;line-height:1.55;margin:0 0 16px}
+@media(max-height:700px){.how-to-play{padding:8px 12px;margin:-8px 0 10px}.how-to-play span{font-size:9px}.tagline{margin:14px 0}}
