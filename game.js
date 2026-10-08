@@ -448,7 +448,7 @@ function applyPerformanceTier(tier){
  if(tier===3){p.renderEvery=1;p.effectEvery=1;p.trailMax=150;p.dprCap=1.25}
  else if(tier===2){p.renderEvery=1;p.effectEvery=1;p.trailMax=120;p.dprCap=1.15}
  else if(tier===1){p.renderEvery=1;p.effectEvery=2;p.trailMax=90;p.dprCap=1}
- else {p.renderEvery=2;p.effectEvery=3;p.trailMax=60;p.dprCap=1}
+ else {p.renderEvery=1;p.effectEvery=3;p.trailMax=60;p.dprCap=1}
 }
 function updatePerformance(rawDt){
  const p=performanceState;
