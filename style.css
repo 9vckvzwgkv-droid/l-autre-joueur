@@ -120,71 +120,59 @@ button{min-height:44px}
 @media (max-height:520px) and (orientation:landscape){#board{width:min(54vh,620px);max-height:54vh}.controls{height:74px;bottom:4px}.controls #joy{width:72px;height:72px}.controls #knob{width:34px;height:34px;left:18px;top:18px}.hud{height:56px;padding-top:max(5px,env(safe-area-inset-top))}.hud strong{font-size:11px}#objectivePanel{top:62px;transform:translateX(-50%) scale(.9);transform-origin:top center}#chapterHint{display:none}}
 @media (prefers-contrast:more){#joy,#knob,.icon{border-width:2px}canvas{border-width:2px}}
 
-
-/* Correctif Safari 18 : les commandes HUD restent distinctes et cliquables. */
-#thought{pointer-events:none}
-.hud{grid-template-columns:44px minmax(0,1fr) repeat(4,44px)}
-.hud #home{grid-column:1;grid-row:1}
-.hud>div:not(.relation){grid-column:2;grid-row:1;min-width:0}
-.hud .relation{grid-column:3;grid-row:1}
-.hud #pause{grid-column:4;grid-row:1}
-.hud #audioToggle{position:static;grid-column:5;grid-row:1;width:42px;height:42px}
-.hud #restart{grid-column:6;grid-row:1}
+/* V1.1 BETA 1 — interface clarifiée, menu latéral et lisibilité du monde */
+#game{display:block;overflow:hidden;isolation:isolate}
+#board{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:min(92vw,620px,calc(100dvh - 390px));height:auto;aspect-ratio:1;max-height:calc(100dvh - 390px);margin:0;z-index:1}
+#board:after{z-index:2}
+#objectivePanel{top:88px;width:min(420px,86vw);z-index:4}
+#chapterHint{top:174px;max-width:88vw;white-space:normal;line-height:1.4;letter-spacing:.1em;z-index:3}
+#thought{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+#signal{top:72px;z-index:5;padding:6px 10px;border:1px solid #33414a;border-radius:999px;background:#080d12ed;max-width:90vw;text-align:center}
+.controls{height:176px;bottom:max(7px,env(safe-area-inset-bottom));z-index:3;pointer-events:none}
+.controls #joy{pointer-events:auto}
+.controls span,#controlTip{color:#9ba8ad!important;text-shadow:0 1px 8px #000}
+#controlTip{font-size:9px!important;opacity:1!important}
+.menu-toggle{font-size:18px!important;letter-spacing:0}
+#drawerScrim{position:absolute;inset:0;background:#020509a8;backdrop-filter:blur(3px);z-index:22;opacity:0;visibility:hidden;transition:opacity .22s ease,visibility .22s ease;pointer-events:none}
+#drawerScrim.open{opacity:1;visibility:visible;pointer-events:auto}
+#sideDrawer{position:absolute;z-index:24;top:0;bottom:0;left:0;width:min(320px,84vw);padding:calc(16px + env(safe-area-inset-top)) 18px calc(18px + env(safe-area-inset-bottom));overflow-y:auto;overscroll-behavior:contain;background:linear-gradient(155deg,#111a21f7,#080c11fc 72%);border-right:1px solid #35434b;box-shadow:24px 0 70px #0009;transform:translateX(-105%);visibility:hidden;transition:transform .25s ease,visibility .25s ease;display:flex;flex-direction:column;gap:15px;align-items:stretch}
+#sideDrawer.open{transform:translateX(0);visibility:visible}
+.drawer-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-bottom:12px;border-bottom:1px solid #28343b}
+.drawer-kicker,.drawer-label,.drawer-chapter span{display:block;color:#8ba0a7;font-size:9px;letter-spacing:.18em}
+.drawer-head h2{margin:5px 0 0;font-size:24px;letter-spacing:-.04em;color:#edf2f2}
+.drawer-chapter{padding:12px 13px;border:1px solid #2b3a42;border-radius:12px;background:#172129}
+.drawer-chapter strong{display:block;margin-top:5px;font-size:13px;color:#f2f6f6}
+.drawer-section{padding:12px 13px;border:1px solid #25333a;border-radius:12px;background:#0c1217}
+.drawer-section p{margin:7px 0 0;color:#c0cbce;font-size:12px;line-height:1.55}
+.drawer-section small{display:block;margin-top:8px;color:#9ee8c1;font-size:9px;letter-spacing:.12em}
+.drawer-actions{display:grid;gap:8px;margin-top:auto;padding-top:4px}
+.drawer-actions .secondary,.drawer-actions .ghost{width:100%;min-width:0;margin:0;font-size:10px;padding:12px 10px;min-height:44px}
+#drawerExit{color:#c0a4a8}
+#pauseOverlay{z-index:28}
 @media(max-width:520px){
-  .hud{grid-template-columns:40px minmax(0,1fr) repeat(4,40px)}
-  .hud #audioToggle{position:static;width:38px;height:38px}
+ #board{width:min(92vw,calc(100dvh - 390px));max-height:calc(100dvh - 390px)}
+ #objectivePanel{top:84px;width:min(380px,88vw);padding:8px 10px}
+ #objectivePanel strong{font-size:10px;line-height:1.4}
+ #chapterHint{top:160px;font-size:8px;max-width:88vw;opacity:.85}
+ #signal{top:66px;font-size:8px;letter-spacing:.1em}
+ .hud{z-index:6}
+ .controls{height:174px}
+ #sideDrawer{width:min(310px,84vw);gap:12px;padding-left:15px;padding-right:15px}
 }
-@media(max-width:380px){
-  .hud{grid-template-columns:36px minmax(0,1fr) repeat(4,36px)}
-  .hud .icon{width:36px;height:36px;min-width:36px;min-height:36px}
-  .hud #audioToggle{width:36px;height:36px}
+@media(max-height:700px){
+ #board{width:min(86vw,620px,calc(100dvh - 350px));max-height:calc(100dvh - 350px)}
+ #objectivePanel{top:76px}
+ #chapterHint{top:151px}
+ .controls{height:145px}
 }
-
-/* Correctif Safari 18.6 — conserve le plateau carré quand la fenêtre est basse. */
-#board{width:min(92vw,620px,60vh);height:auto;max-height:none;aspect-ratio:1}
-@media(max-height:620px) and (orientation:landscape){#board{width:min(54vh,620px,92vw)}}
-
-/* Mobile touch targets: keep the HUD controls at least 44px and prevent overlap. */
-@media(max-width:520px){
-  .hud{grid-template-columns:44px minmax(0,1fr) repeat(4,44px)}
-  .hud .icon,.hud #audioToggle{width:44px;height:44px;min-width:44px;min-height:44px}
+@media(max-height:520px) and (orientation:landscape){
+ #board{left:57%;top:50%;width:min(48vh,54vw);max-height:48vh}
+ #objectivePanel{left:12px;top:78px;transform:none;width:min(30vw,260px)}
+ #chapterHint{left:12px;top:168px;transform:none;width:min(30vw,260px);text-align:left}
+ .controls{left:0;right:auto;width:28%;height:100px;bottom:4px}
+ #joy{margin:0;width:72px;height:72px}
+ #knob{width:34px;height:34px;left:18px;top:18px}
+ #controlTip{max-width:26vw}
 }
-@media(max-width:380px){
-  .hud{grid-template-columns:44px minmax(0,1fr) repeat(3,44px);padding-left:4px;padding-right:4px}
-  .hud .relation{display:none}
-  .hud #pause{grid-column:3}
-  .hud #audioToggle{grid-column:4}
-  .hud #restart{grid-column:5}
-}
-
-/* Clear first-play guidance and a readable personal ending recap */
-.how-to-play{width:min(330px,88vw);padding:11px 14px;margin:-6px 0 14px;border:1px solid #202832;border-radius:12px;background:#0b1015;color:#aab5b8;text-align:left;line-height:1.45}
-.how-to-play b{display:block;margin-bottom:4px;color:#9ee8c1;font-size:8px;letter-spacing:.16em}
-.how-to-play span{display:block;font-size:10px}
-#endingRecap{width:min(390px,90vw);text-align:center;color:#b2c1bf;font-size:12px;line-height:1.55;margin:0 0 16px}
-@media(max-height:700px){.how-to-play{padding:8px 12px;margin:-8px 0 10px}.how-to-play span{font-size:9px}.tagline{margin:14px 0}}
-
-/* Keep the first-run menu usable in short desktop landscape windows. */
-@media(max-height:420px) and (orientation:landscape){
- #menu{justify-content:flex-start;overflow-y:auto;padding:10px 16px}
- #menu .eyebrow{margin:0 0 6px}
- #menu .brand{font-size:clamp(26px,6vw,38px)}
- #menu .tagline{font-size:11px;line-height:1.3;margin:6px 0}
- #menu .how-to-play{width:min(420px,88vw);padding:6px 10px;margin:0 0 6px}
- #menu .how-to-play span{font-size:9px}
- #menu .memory-card{padding:6px 10px;margin:0 0 7px}
- #menu .primary,#menu .secondary{min-height:38px;padding:8px 16px}
- #menu .secondary{margin-top:4px}
- #menu .ghost{min-height:28px;margin-top:0;padding:5px 12px}
- #menu>small{display:none}
-}
-
-/* Safari performance: avoid repeatedly compositing blurred HUD layers over the live canvas. */
-body.safari-browser #board{filter:none}
-body.safari-browser canvas{box-shadow:none}
-body.safari-browser .hud,
-body.safari-browser #objectivePanel,
-body.safari-browser .memory-card,
-body.safari-browser .pauseCard{backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
-body.safari-browser #app:before,
-body.safari-browser #app:after{filter:none;opacity:.06}
+@media(prefers-reduced-motion:reduce){#sideDrawer,#drawerScrim{transition:none}}
+#worldStatus{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
