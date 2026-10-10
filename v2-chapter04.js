@@ -1,20 +1,46 @@
-/* Chapitre 4 — ATTENTE : synchronisation de deux dalles, portes cycliques et refuge secret. */
+/* Chapitre 4 — ATTENTE : anneau asymétrique, dalles synchronisées, porte cyclique et refuge secret. */
 'use strict';
 (() => {
   const W=64,H=44,SAVE='otherPlayerChapter4SaveV2',BACKUP=SAVE+'_backup',CAMPAIGN='otherPlayerCampaignV2_1';
   const canvas=document.getElementById('world'),ctx=canvas.getContext('2d',{alpha:false}),map=document.getElementById('minimap'),mctx=map.getContext('2d');
   const $=id=>document.getElementById(id),idx=(x,y)=>y*W+x,grid=new Uint8Array(W*H).fill(1),dirs=[[1,0],[-1,0],[0,1],[0,-1]];
-  const rooms=[{label:'VESTIBULE',x:2,y:16,w:12,h:13},{label:'REFUGE DES MURMURES',x:14,y:4,w:14,h:13},{label:'SALLE DES IMPULSIONS',x:29,y:2,w:14,h:13},{label:'CARREFOUR DES PORTES',x:27,y:16,w:14,h:13},{label:'GALERIE DU TEMPS',x:29,y:31,w:14,h:11},{label:'SALLE DE SORTIE',x:45,y:16,w:18,h:13}];
+  // Géométrie dédiée au chapitre 4 : anneau irrégulier de huit chambres
+  // autour d'un carrefour sonore, avec un verrou cyclique sur la branche est.
+  const rooms=[
+    {label:'VESTIBULE DE L’ATTENTE',x:2,y:16,w:12,h:13},
+    {label:'REFUGE DES MURMURES',x:14,y:3,w:13,h:12},
+    {label:'ARCHIVE DES IMPULSIONS',x:30,y:2,w:14,h:13},
+    {label:'GALERIE SUSPENDUE',x:47,y:5,w:15,h:11},
+    {label:'CHAMBRE DE L’HORLOGE',x:47,y:17,w:15,h:14},
+    {label:'SALLE DU DERNIER ÉCHO',x:47,y:32,w:15,h:10},
+    {label:'ARCHIVE MÉRIDIENNE',x:30,y:31,w:14,h:11},
+    {label:'GALERIE DU RETOUR',x:14,y:30,w:13,h:11},
+    {label:'CARREFOUR DES PORTES',x:25,y:16,w:16,h:13}
+  ];
   const floor=(x,y)=>{if(x>0&&y>0&&x<W-1&&y<H-1)grid[idx(x,y)]=0;};
   function room(r){for(let y=r.y+1;y<r.y+r.h-1;y++)for(let x=r.x+1;x<r.x+r.w-1;x++)floor(x,y);}
   function segment(a,b,r=1){let x=a[0],y=a[1],dx=Math.sign(b[0]-x),dy=Math.sign(b[1]-y);const stamp=()=>{for(let oy=-r;oy<=r;oy++)for(let ox=-r;ox<=r;ox++)floor(x+ox,y+oy);};while(x!==b[0]||y!==b[1]){stamp();if(x!==b[0])x+=dx;else if(y!==b[1])y+=dy;}stamp();}
   function route(points,r=1){for(let i=1;i<points.length;i++)segment(points[i-1],points[i],r);}
   rooms.forEach(room);
-  [[[12,21],[15,21]],[[21,16],[21,14],[21,10],[27,10],[29,10]],[[36,14],[36,16],[34,16]],[[34,27],[34,30],[36,30],[36,31]],[[40,21],[44,21],[45,21]],[[40,7],[44,7],[44,15],[50,15],[50,16]],[[40,36],[44,36],[44,29],[50,29],[50,28]],[[16,22],[16,29],[24,29],[27,25]]].forEach(p=>route(p));
-  // Small wall islands create bends and sightline breaks in each chamber.
-  [[17,7,2,4],[23,11,2,2],[31,4,2,3],[38,9,2,2],[29,19,2,4],[36,24,2,2],[31,34,2,1],[38,36,1,3],[48,18,1,4],[55,23,3,1]].forEach(([x,y,w,h])=>{for(let yy=y;yy<y+h;yy++)for(let xx=x;xx<x+w;xx++)grid[idx(xx,yy)]=1;});
-  // A concealed bypass joins the west and east sides of the swinging-door corridor.
-  for(let x=38;x<=46;x++)for(let y=18;y<=19;y++)floor(x,y);
+  [
+    [[12,21],[26,21]],                 // entrée vers le carrefour
+    [[28,17],[28,12],[20,12],[20,10]], // boucle nord-ouest
+    [[25,8],[31,8]],                    // archive nord
+    [[42,8],[48,10]],                   // galerie suspendue
+    [[54,14],[54,18]],                  // descente vers l'horloge
+    [[54,29],[54,33]],                  // aile sud-est
+    [[48,37],[43,36]],                  // retour par l'archive méridienne
+    [[30,36],[26,35]],                  // boucle sud-ouest
+    [[16,30],[12,27],[12,24]],          // retour vers le vestibule
+    [[35,16],[35,12]],                  // liaison centrale haute
+    [[35,28],[35,32]],                  // liaison centrale basse
+    [[39,22],[48,22]],                  // passage cyclique principal
+    [[39,19],[48,19]]                   // détour secret, ouvert au refuge
+  ].forEach(p=>route(p));
+  // Piliers décalés pour casser les lignes de vue sans bloquer les objectifs.
+  [[23,8,1,2],[33,4,2,1],[39,10,1,2],[50,8,2,1],
+   [58,11,1,2],[50,20,1,3],[58,25,2,1],[50,35,2,1],[38,38,1,2],
+   [32,33,1,2],[18,34,2,1],[28,24,1,2],[36,24,2,1]].forEach(([x,y,w,h])=>{for(let yy=y;yy<y+h;yy++)for(let xx=x;xx<x+w;xx++)grid[idx(xx,yy)]=1;});
   const start={x:7.5,y:21.5},otherStart={x:8.5,y:23.5},playerPlate={x:33.5,y:21.5},otherPlate={x:35.5,y:7.5},niche={x:17.5,y:6.5},exit={x:58.5,y:21.5};
   const s={player:{...start},other:{...otherStart},playerPlateLatched:false,otherPlate:false,gate:false,secret:false,hint:false,waited:false,complete:false,paused:true,explored:new Uint8Array(W*H),events:[],frame:0,elapsed:0,lastSave:0,toastUntil:0};
   let input={x:0,y:0},held=new Map(),pointer=null,lastFrame=0,viewW=1,viewH=1,dpr=1,camera={x:0,y:0},path=[],pathKey='',pathTimer=0,drawer=false,drawerWasPaused=false,restartWasPaused=true,restartFocus=null;
@@ -28,7 +54,7 @@
   function load(){let d;try{d=decode(localStorage.getItem(SAVE)||'')||decode(localStorage.getItem(BACKUP)||'');}catch{}if(!d)return;for(const k of ['playerPlateLatched','otherPlate','gate','secret','hint','waited','complete'])s[k]=!!d[k];s.player=validPos(d.player)?d.player:{...start};s.other=validPos(d.other)?d.other:{...otherStart};s.events=Array.isArray(d.events)?d.events.slice(-40):[];if(Array.isArray(d.explored)&&d.explored.length===W*H)s.explored=Uint8Array.from(d.explored,n=>n?1:0);}
   function remember(type){s.events.push({type,time:Date.now()});if(s.events.length>40)s.events.shift();save(true);}
   function toast(msg,d=3000){$('toast').textContent=msg;$('toast').classList.add('visible');s.toastUntil=performance.now()+d;}
-  function campaignComplete(){let a=[];try{let d=JSON.parse(localStorage.getItem(CAMPAIGN)||'{}');if(d.version===1&&Array.isArray(d.completed))a=d.completed.filter(n=>Number.isInteger(n)&&n>=1&&n<=36);}catch{}if(!a.includes(4))a.push(4);try{localStorage.setItem(CAMPAIGN,JSON.stringify({version:1,completed:a}));}catch{}}
+  function campaignComplete(){ window.v2MarkCampaignChapterComplete?.(4); }
   function updateHud(){const onPlayer=near(s.player,playerPlate,.82),onOther=near(s.other,otherPlate,.95);s.otherPlate=onOther;const both=onPlayer&&onOther;if(both&&!s.gate){s.gate=true;remember('chapter4_plates_synchronised');toast('Les deux dalles résonnent ensemble. La sortie est libérée.');} $('branchCount').textContent=`SYNCHRO · ${onPlayer?'TOI ✓':'TOI —'} / ${onOther?'L’AUTRE ✓':'L’AUTRE —'}`;$('gateStatus').textContent=s.gate?'SORTIE : OUVERTE':'SORTIE : VERROUILLÉE';$('otherStatus').textContent=onOther?'L’AUTRE : SUR SA DALLE':near(s.player,s.other,1.6)?'L’AUTRE : AVEC TOI':s.hint?'L’AUTRE : A COMPRIS LE SIGNAL':'L’AUTRE : EN EXPLORATION';let o=s.complete?'CHAPITRE TERMINÉ · SYNCHRONISATION RÉUSSIE':s.gate?'Les dalles ont résonné ensemble. Rejoins la sortie avec l’Autre.':!onPlayer?'Trouve la dalle sonore au carrefour et reste dessus pour appeler l’Autre.':!onOther?'Tiens la dalle. L’Autre cherche la seconde dalle au nord-est : laisse-lui le temps.':'Les deux dalles sont actives.';$('objective').textContent=o;$('drawerObjective').textContent=o;$('drawerObjectiveState').textContent=s.complete?'TERMINÉ':s.gate?'SYNCHRONISATION VALIDÉE':both?'LES DEUX DALLES ACTIVES':onPlayer?'EN ATTENTE DE L’AUTRE':'À TROUVER';$('drawerOtherStatus').textContent=$('otherStatus').textContent;$('drawerGateStatus').textContent=$('gateStatus').textContent;$('drawerProgress').textContent=`DALLE JOUEUR : ${onPlayer?'ACTIVE':'INACTIVE'} · DALLE AUTRE : ${onOther?'ACTIVE':'INACTIVE'} · REFUGE : ${s.secret?'OUVERT':'À TROUVER'}`;$('drawerJourney').textContent=s.waited?'PARCOURS : TU AS LAISSÉ LE TEMPS À L’AUTRE':'PARCOURS : '+(s.hint?'TU AS APPELÉ L’AUTRE':'À DÉCOUVRIR');}
   function interact(){if(s.paused||s.complete)return;if(near(s.player,niche,1.6)){if(!s.secret){s.secret=true;remember('chapter4_secret_refuge_found');toast('Tu découvres un refuge caché. Une galerie latérale contourne les portes battantes.');}else toast('Le refuge secret est ouvert : le détour reste accessible.');}
     else if(near(s.player,playerPlate,1.8)){s.playerPlateLatched=true;s.waited=true;remember('chapter4_player_plate_wait');toast('La dalle répond à ton poids. L’Autre observe le signal et cherche la seconde dalle. Reste ici un instant.');}

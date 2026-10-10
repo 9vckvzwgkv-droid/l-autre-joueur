@@ -12,9 +12,9 @@
     ['MIROIR', 'Faire se rencontrer deux trajets et distinguer les traces du reflet.'],
     ['DISTANCE / ABANDON', 'Activer deux relais ; décider comment rejoindre ou quitter l’Autre.'],
     ['CHOIX', 'Comparer trois branches et choisir le raccourci qui façonnera la suite.'],
-    ['BLOCAGE / PUNITION', 'Libérer une porte en choisissant entre coordination et détour.'],
+    ['BLOCAGE / PUNITION', 'Activer deux leviers, gérer une caisse qui bloque le passage et observer l’Autre choisir un détour protecteur.'],
     ['OBSERVATION', 'Observer trois postes puis reproduire une séquence.'],
-    ['MENSONGE', 'Comparer les indices pour repérer une indication trompeuse.'],
+    ['MENSONGE', 'Comparer trois indices, choisir de croire l’Autre ou vérifier une indication trompeuse.'],
     ['SOUVENIR', 'Retrouver un repère lié à un choix antérieur, avec indice de secours.'],
     ['CONFIANCE', 'Suivre une route proposée par l’Autre ou vérifier ses balises.'],
     ['TRAHISON', 'Assembler les éléments d’un pont et comprendre une promesse échouée.'],
@@ -141,22 +141,45 @@
     renderCampaign();
   }
   function markCampaignChapterComplete(chapter) {
+    if (!Number.isInteger(chapter) || chapter < 1 || chapter > 36) return false;
+    if (!completedCampaignChapters.includes(chapter) && chapter > 1 && !completedCampaignChapters.includes(chapter - 1)) {
+      toast(`Chapitre ${chapter} non validé : termine d’abord le chapitre ${chapter - 1}.`);
+      return false;
+    }
     if (!completedCampaignChapters.includes(chapter)) completedCampaignChapters.push(chapter);
     saveCampaignProgress();
+    return true;
+  }
+  const playableCampaignChapters = new Set([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]);
+  function chapterUnlocked(number) {
+    return number === 1 || completedCampaignChapters.includes(number) || completedCampaignChapters.includes(number - 1);
+  }
+  function nextCampaignChapter() {
+    for (let n = 1; n <= 36; n++) if (!completedCampaignChapters.includes(n)) return n;
+    return 36;
   }
   function renderCampaign() {
     const list = $('campaignChapters');
     if (!list) return;
     list.innerHTML = campaignChapters.map(([title, description], i) => {
-      const number = i + 1, playable = number === 1 || number === 2 || number === 3 || number === 4 || number === 5 || number === 6 || number === 7, complete = completedCampaignChapters.includes(number);
-      const status = complete ? 'Prototype terminé · rejouable' : playable ? 'Prototype jouable' : 'À intégrer avant d’être jouable';
-      const classes = ['campaign-chapter', playable ? 'is-playable' : '', complete ? 'is-complete' : ''].filter(Boolean).join(' ');
-      const selectable = playable ? ` data-open-chapter="${number}" role="button" tabindex="0" aria-haspopup="dialog" aria-label="Ouvrir les détails du chapitre ${number} : ${title}"` : '';
-      return `<article class="${classes}"${selectable}><span class="chapter-number">${String(number).padStart(2, '0')}</span><strong>${title}</strong><p>${description}</p><small>${playable ? `${status} · CLIQUER POUR OUVRIR` : status}</small></article>`;
+      const number = i + 1;
+      const complete = completedCampaignChapters.includes(number);
+      const unlocked = chapterUnlocked(number);
+      const playable = playableCampaignChapters.has(number);
+      const canLaunch = unlocked && playable;
+      const status = complete ? 'Terminé · rejouable' : !playable ? 'Chapitre à intégrer' : unlocked ? 'Disponible' : `Verrouillé · terminer le chapitre ${number - 1}`;
+      const classes = ['campaign-chapter', canLaunch ? 'is-playable' : '', complete ? 'is-complete' : '', !unlocked ? 'is-locked' : '', !playable ? 'is-unavailable' : ''].filter(Boolean).join(' ');
+      return `<article class="${classes}" data-open-chapter="${number}" role="button" tabindex="0" aria-haspopup="dialog" aria-label="Voir les détails du chapitre ${number} : ${title}${canLaunch ? '' : ', lancement indisponible'}"><span class="chapter-number">${String(number).padStart(2, '0')}</span><strong>${title}</strong><p>${description}</p><small>${status} · VOIR LES DÉTAILS</small></article>`;
     }).join('');
     const count = completedCampaignChapters.length;
-    $('campaignProgress').textContent = `36 chapitres prévus · 7 prototypes jouables${count ? ` · ${count} chapitre${count > 1 ? 's' : ''} terminé${count > 1 ? 's' : ''}` : ''}`;
-    $('campaignPlay').textContent = completedCampaignChapters.includes(7) ? 'REJOUER LE PROTOTYPE DU CHAPITRE 7' : 'JOUER AU PROTOTYPE DU CHAPITRE 7';
+    const next = nextCampaignChapter();
+    $('campaignProgress').textContent = `36 chapitres prévus · 12 prototypes intégrés · ${count}/36 terminés`;
+    $('campaignFinaleReplay').hidden = !campaignFullyComplete();
+    $('campaignPlay').textContent = playableCampaignChapters.has(next)
+      ? (completedCampaignChapters.includes(next) ? `REJOUER LE CHAPITRE ${next}` : `JOUER LE CHAPITRE ${next}`)
+      : `CHAPITRE ${next} · À INTÉGRER`;
+    $('campaignPlay').disabled = !playableCampaignChapters.has(next) || !chapterUnlocked(next);
+    $('campaignPlay').dataset.chapter = String(next);
   }
   function openCampaign() {
     campaignFocusReturn = document.activeElement;
@@ -173,15 +196,20 @@
     if (campaignFocusReturn?.focus) campaignFocusReturn.focus();
   }
   function openChapterLaunch(number, source = document.activeElement) {
-    if (![1, 2, 3, 4, 5, 6, 7].includes(number)) return;
+    if (!Number.isInteger(number) || number < 1 || number > 36) return;
     const [title, description] = campaignChapters[number - 1];
     selectedCampaignChapter = number; chapterLaunchFocusReturn = source;
     $('chapterLaunchKicker').textContent = `CHAPITRE ${String(number).padStart(2, '0')} · ${title}`;
     $('chapterLaunchTitle').textContent = title;
     $('chapterLaunchDescription').textContent = description;
-    $('chapterLaunchPlay').textContent = `JOUER LE CHAPITRE ${number}`;
+    const unlocked = chapterUnlocked(number);
+    const playable = playableCampaignChapters.has(number);
+    const canLaunch = unlocked && playable;
+    $('chapterLaunchPlay').textContent = !playable ? 'CHAPITRE À INTÉGRER' : unlocked ? (completedCampaignChapters.includes(number) ? `REJOUER LE CHAPITRE ${number}` : `JOUER LE CHAPITRE ${number}`) : `VERROUILLÉ · TERMINER LE CHAPITRE ${number - 1}`;
+    $('chapterLaunchPlay').disabled = !canLaunch;
+    $('chapterLaunchKicker').textContent = `CHAPITRE ${String(number).padStart(2, '0')} · ${canLaunch ? 'DISPONIBLE' : !playable ? 'À INTÉGRER' : 'VERROUILLÉ'}`;
     $('chapterLaunchOverlay').classList.add('active'); $('chapterLaunchOverlay').setAttribute('aria-hidden', 'false');
-    $('chapterLaunchPlay').focus();
+    $('chapterLaunchClose').focus();
   }
   function closeChapterLaunch() {
     $('chapterLaunchOverlay').classList.remove('active'); $('chapterLaunchOverlay').setAttribute('aria-hidden', 'true');
@@ -190,7 +218,9 @@
   }
   function launchSelectedChapter() {
     const chapter = selectedCampaignChapter;
+    const canLaunch = playableCampaignChapters.has(chapter) && chapterUnlocked(chapter);
     closeChapterLaunch();
+    if (!canLaunch) { renderCampaign(); return; }
     if (chapter === 1) location.href = 'v2-chapter01.html';
     else if (chapter === 2) location.href = 'v2-chapter02.html';
     else if (chapter === 3) location.href = 'v2-chapter03.html';
@@ -198,10 +228,105 @@
     else if (chapter === 5) location.href = 'v2-chapter05.html';
     else if (chapter === 6) location.href = 'v2-chapter06.html';
     else if (chapter === 7) location.href = 'v2-chapter07.html';
+    else if (chapter === 8) location.href = 'v2-chapter08.html';
+    else if (chapter === 9) location.href = 'v2-chapter09.html';
+    else if (chapter === 10) location.href = 'v2-chapter10.html';
+    else if (chapter === 11) location.href = 'v2-chapter11.html';
+    else if (chapter === 12) location.href = 'v2-chapter12.html';
   }
   function playCampaignPrototype() {
+    const chapter = nextCampaignChapter();
     closeCampaign();
-    location.href = 'v2-chapter07.html';
+    if (playableCampaignChapters.has(chapter) && chapterUnlocked(chapter)) {
+      location.href = `v2-chapter${String(chapter).padStart(2, '0')}.html`;
+    } else {
+      openChapterLaunch(chapter, $('campaignPlay'));
+    }
+  }
+
+  const finaleScenes = [
+    { title: 'Au-delà du labyrinthe', text: 'Pour la première fois, aucun mur ne vous indique où aller. Devant vous, le monde est vaste — et la route n’est plus écrite d’avance.' },
+    { title: 'Toutes les traces', text: 'Les détours, les erreurs, les refus et les gestes de confiance restent avec vous. Rien n’a été effacé : chaque choix a changé la manière dont vous vous regardez.' },
+    { title: 'Ce que tu lui as appris', text: 'L’Autre a appris que t’aider ne signifie pas décider à ta place. Il peut proposer une route, attendre ta réponse, et accepter que tu choisisses autrement.' },
+    { title: 'Ce qu’il t’a appris', text: 'Tu as découvert qu’une présence peut se tromper, douter, s’éloigner — puis revenir. La confiance n’était pas une porte à ouvrir, mais quelque chose à construire.' },
+    { title: 'La suite vous appartient', text: 'Le labyrinthe se tait. L’Autre tourne la tête vers toi, sans ordre ni menace. « Cette fois, où allons-nous ? » La réponse, enfin, n’appartient qu’à vous.' }
+  ];
+  let finaleIndex = 0, finaleTimer = null, finalePaused = false, finaleFinished = false, finaleSoundOn = false, finaleAudio = null;
+  const FINALE_SEEN_KEY = 'otherPlayerCampaignV2_finaleSeen';
+  function campaignFullyComplete() {
+    return completedCampaignChapters.length === 36 && Array.from({ length: 36 }, (_, i) => i + 1).every(n => completedCampaignChapters.includes(n));
+  }
+  function finaleBeep() {
+    if (!finaleSoundOn) return;
+    try {
+      const AudioContext = window.AudioContext || window.webkitAudioContext;
+      if (!AudioContext) return;
+      finaleAudio ||= new AudioContext();
+      if (finaleAudio.state === 'suspended') finaleAudio.resume();
+      const osc = finaleAudio.createOscillator(), gain = finaleAudio.createGain();
+      osc.type = 'sine'; osc.frequency.value = [220, 277.18, 329.63, 440, 392][finaleIndex] || 330;
+      gain.gain.setValueAtTime(.0001, finaleAudio.currentTime);
+      gain.gain.exponentialRampToValueAtTime(.045, finaleAudio.currentTime + .12);
+      gain.gain.exponentialRampToValueAtTime(.0001, finaleAudio.currentTime + 1.25);
+      osc.connect(gain); gain.connect(finaleAudio.destination); osc.start(); osc.stop(finaleAudio.currentTime + 1.3);
+    } catch {}
+  }
+  function stopFinaleTimer() { if (finaleTimer) clearTimeout(finaleTimer); finaleTimer = null; }
+  function scheduleFinaleAdvance() {
+    stopFinaleTimer();
+    if (finalePaused || finaleFinished || window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) return;
+    finaleTimer = setTimeout(() => advanceFinale(), 6500);
+  }
+  function renderFinaleScene() {
+    const scene = finaleScenes[finaleIndex];
+    $('finaleScene').textContent = `ÉPILOGUE · ${String(finaleIndex + 1).padStart(2, '0')} / ${String(finaleScenes.length).padStart(2, '0')}`;
+    $('finaleTitle').textContent = scene.title;
+    $('finaleText').textContent = scene.text;
+    $('finaleProgressBar').style.width = `${((finaleIndex + 1) / finaleScenes.length) * 100}%`;
+    $('finaleNext').textContent = finaleIndex === finaleScenes.length - 1 ? 'TERMINER' : 'CONTINUER';
+    $('finaleSkip').hidden = finaleIndex === finaleScenes.length - 1;
+    finaleBeep(); scheduleFinaleAdvance();
+  }
+  function finishFinale() {
+    stopFinaleTimer(); finaleFinished = true; finalePaused = true;
+    try { localStorage.setItem(FINALE_SEEN_KEY, '1'); } catch {}
+    $('finaleScene').textContent = 'FIN · CAMPAGNE TERMINÉE';
+    $('finaleTitle').textContent = 'Le labyrinthe est derrière vous.';
+    $('finaleText').textContent = '36 chapitres, une multitude de décisions, et une histoire qui vous appartient. Tu peux revoir cette cinématique à tout moment depuis la campagne.';
+    $('finaleProgressBar').style.width = '100%';
+    $('finalePause').hidden = true; $('finaleSound').hidden = true; $('finaleNext').hidden = true; $('finaleSkip').hidden = true;
+    $('finaleReplay').hidden = false; $('finaleReturn').hidden = false;
+    $('finaleReplay').focus();
+  }
+  function advanceFinale() {
+    if (finaleFinished) return;
+    if (finaleIndex >= finaleScenes.length - 1) { finishFinale(); return; }
+    finaleIndex++; renderFinaleScene();
+  }
+  function closeCampaignIfOpen() {
+    $('campaignOverlay').classList.remove('active'); $('campaignOverlay').setAttribute('aria-hidden', 'true');
+    $('chapterLaunchOverlay').classList.remove('active'); $('chapterLaunchOverlay').setAttribute('aria-hidden', 'true');
+  }
+  function openFinale() {
+    if (!campaignFullyComplete()) {
+      openCampaign();
+      toast('La cinématique finale se débloque après les 36 chapitres.', 3600);
+      return;
+    }
+    closeCampaignIfOpen();
+    finaleIndex = 0; finaleFinished = false;
+    finalePaused = Boolean(window.matchMedia?.('(prefers-reduced-motion: reduce)').matches);
+    $('finalePause').hidden = false; $('finaleSound').hidden = false; $('finaleNext').hidden = false; $('finaleSkip').hidden = false;
+    $('finaleReplay').hidden = true; $('finaleReturn').hidden = true;
+    $('finalePause').textContent = finalePaused ? 'REPRENDRE' : 'METTRE EN PAUSE';
+    $('finaleSound').textContent = finaleSoundOn ? 'SON : ON' : 'SON : OFF';
+    $('finaleOverlay').classList.add('active'); $('finaleOverlay').setAttribute('aria-hidden', 'false');
+    renderFinaleScene(); $('finaleNext').focus();
+  }
+  function closeFinaleToCampaign() {
+    stopFinaleTimer(); $('finaleOverlay').classList.remove('active'); $('finaleOverlay').setAttribute('aria-hidden', 'true');
+    if (location.hash === '#finale') history.replaceState(null, '', location.pathname + location.search);
+    openCampaign();
   }
 
   function checksum(text) {
@@ -671,6 +796,11 @@
     lastFrame = performance.now(); $('startButton').focus();
   }
   function enterPrototype() {
+    if (!chapterUnlocked(6)) {
+      openCampaign();
+      toast('Le chapitre 6 est verrouillé : termine les chapitres précédents dans l’ordre.', 3800);
+      return;
+    }
     if (state.complete) { restartPrototype(); return; }
     $('introOverlay').classList.remove('active'); $('introOverlay').setAttribute('aria-hidden', 'true');
     state.paused = false; $('pauseButton').textContent = 'PAUSE'; $('pauseButton').setAttribute('aria-pressed', 'false');
@@ -712,6 +842,28 @@
   $('pauseMenuButton').addEventListener('click', () => setDrawer(true));
   $('startButton').addEventListener('click', enterPrototype);
   $('introCampaign').addEventListener('click', openCampaign);
+  $('campaignFinaleReplay').addEventListener('click', openFinale);
+  $('finaleNext').addEventListener('click', advanceFinale);
+  $('finaleSkip').addEventListener('click', finishFinale);
+  $('finalePause').addEventListener('click', () => {
+    if (finaleFinished) return;
+    finalePaused = !finalePaused;
+    $('finalePause').textContent = finalePaused ? 'REPRENDRE' : 'METTRE EN PAUSE';
+    if (finalePaused) stopFinaleTimer(); else scheduleFinaleAdvance();
+  });
+  $('finaleSound').addEventListener('click', () => {
+    finaleSoundOn = !finaleSoundOn;
+    $('finaleSound').textContent = finaleSoundOn ? 'SON : ON' : 'SON : OFF';
+    $('finaleSound').setAttribute('aria-pressed', String(finaleSoundOn));
+    if (finaleSoundOn) finaleBeep();
+  });
+  $('finaleReplay').addEventListener('click', openFinale);
+  $('finaleReturn').addEventListener('click', closeFinaleToCampaign);
+  $('finaleOverlay').addEventListener('keydown', e => {
+    if (e.key === 'Escape') { e.preventDefault(); if (finaleFinished) closeFinaleToCampaign(); else finishFinale(); }
+    if (e.key === 'ArrowRight' && !finaleFinished) advanceFinale();
+    if (e.key === ' ') { e.preventDefault(); $('finalePause').click(); }
+  });
   $('campaignClose').addEventListener('click', closeCampaign);
   $('campaignBack').addEventListener('click', closeCampaign);
   $('campaignChapters').addEventListener('click', e => {
@@ -724,7 +876,7 @@
     if (!launch) return;
     e.preventDefault(); openChapterLaunch(Number(launch.dataset.openChapter), launch);
   });
-  $('campaignPlay').addEventListener('click', () => openChapterLaunch(6, $('campaignPlay')));
+  $('campaignPlay').addEventListener('click', () => openChapterLaunch(Number($('campaignPlay').dataset.chapter || 1), $('campaignPlay')));
   $('chapterLaunchPlay').addEventListener('click', launchSelectedChapter);
   $('chapterLaunchClose').addEventListener('click', closeChapterLaunch);
   $('chapterLaunchOverlay').addEventListener('click', e => { if (e.target === $('chapterLaunchOverlay')) closeChapterLaunch(); });
@@ -782,6 +934,7 @@
   if (state.events.length) toast('Progression du prototype restaurée. La sauvegarde V1 est séparée.');
   showIntro();
   if (location.hash === '#campagne') openCampaign();
+  if (location.hash === '#finale') { if (campaignFullyComplete()) openFinale(); else { openCampaign(); toast('La cinématique finale reste verrouillée jusqu’à la fin des 36 chapitres.', 4200); } }
 
   function frame(now) {
     requestAnimationFrame(frame);

@@ -60,10 +60,10 @@
     </div>
     <div id="campaignOverlay" class="modal-overlay campaign-overlay" aria-hidden="true">
       <section class="campaign-card" role="dialog" aria-modal="true" aria-labelledby="campaignTitle">
-        <header class="campaign-head"><div><span class="drawer-kicker">L’AUTRE JOUEUR · V2</span><h2 id="campaignTitle">La campagne</h2><p id="campaignProgress">36 chapitres prévus · 7 prototypes jouables</p></div><button id="campaignClose" class="drawer-close" aria-label="Fermer la campagne">×</button></header>
-        <p class="campaign-note">Les thèmes et objectifs prévus des 36 chapitres sont listés ici. Dans cette version, les chapitres 1 à 7 disposent chacun d’un prototype jouable ; les chapitres 8 à 36 restent à intégrer.</p>
+        <header class="campaign-head"><div><span class="drawer-kicker">L’AUTRE JOUEUR · V2</span><h2 id="campaignTitle">La campagne</h2><p id="campaignProgress">36 chapitres prévus · 11 prototypes jouables</p></div><button id="campaignClose" class="drawer-close" aria-label="Fermer la campagne">×</button></header>
+        <p class="campaign-note">Les thèmes et objectifs prévus des 36 chapitres sont listés ici. Dans cette version, les chapitres 1 à 11 disposent chacun d’un prototype jouable ; les chapitres 12 à 36 restent à intégrer.</p>
         <div id="campaignChapters" class="campaign-chapters" aria-label="Liste des chapitres"></div>
-        <div class="campaign-foot"><button id="campaignPlay" class="drawer-action primary-action">JOUER AU PROTOTYPE DU CHAPITRE 6</button><button id="campaignBack" class="drawer-action">RETOUR</button></div>
+        <div class="campaign-foot"><button id="campaignPlay" class="drawer-action primary-action">JOUER AU PROTOTYPE DU CHAPITRE 11</button><button id="campaignFinaleReplay" class="drawer-action" hidden>REVOIR LA CINÉMATIQUE FINALE</button><button id="campaignBack" class="drawer-action">RETOUR</button></div>
       </section>
     </div>
     <div id="chapterLaunchOverlay" class="modal-overlay chapter-launch-overlay" aria-hidden="true">
@@ -73,6 +73,25 @@
         <p id="chapterLaunchDescription">Consulte son objectif avant de commencer.</p>
         <button id="chapterLaunchPlay" class="drawer-action primary-action">JOUER LE CHAPITRE</button>
         <button id="chapterLaunchClose" class="drawer-action">FERMER</button>
+      </section>
+    </div>
+    <div id="finaleOverlay" class="modal-overlay finale-overlay" aria-hidden="true">
+      <section class="finale-card" role="dialog" aria-modal="true" aria-labelledby="finaleTitle" aria-describedby="finaleText">
+        <div class="finale-sky" aria-hidden="true"><span class="finale-orb orb-one"></span><span class="finale-orb orb-two"></span><span class="finale-thread"></span><span class="finale-silhouette player-silhouette"></span><span class="finale-silhouette other-silhouette"></span></div>
+        <div class="finale-copy">
+          <span id="finaleScene" class="drawer-kicker">ÉPILOGUE · 01 / 05</span>
+          <h2 id="finaleTitle">Au-delà du labyrinthe</h2>
+          <p id="finaleText">Pour la première fois, aucun mur ne vous indique où aller.</p>
+          <div class="finale-progress" aria-label="Progression de la cinématique"><span id="finaleProgressBar"></span></div>
+          <div class="finale-controls">
+            <button id="finalePause" class="drawer-action">METTRE EN PAUSE</button>
+            <button id="finaleSound" class="drawer-action" aria-pressed="false">SON : OFF</button>
+            <button id="finaleNext" class="drawer-action primary-action">CONTINUER</button>
+            <button id="finaleSkip" class="drawer-action">PASSER LA CINÉMATIQUE</button>
+            <button id="finaleReplay" class="drawer-action" hidden>REVOIR LA CINÉMATIQUE</button>
+            <button id="finaleReturn" class="drawer-action" hidden>RETOURNER À LA CAMPAGNE</button>
+          </div>
+        </div>
       </section>
     </div>
     <div id="restartOverlay" class="modal-overlay restart-overlay" aria-hidden="true">

@@ -70,3 +70,40 @@ footer{display:flex;align-items:center;justify-content:space-between;gap:10px;co
 @media(max-width:380px){.campaign-chapters{grid-template-columns:1fr}.campaign-chapter{min-height:72px}.campaign-chapter p{font-size:10px}}
 @media(max-width:360px){.topbar{gap:4px}.menu-toggle{font-size:8px}.title span{font-size:6px}.title strong{font-size:10px}}
 @media(prefers-reduced-motion:reduce){.side-drawer,.drawer-scrim,.modal-overlay{transition:none}}
+
+/* Campaign progression: locked chapters remain readable but cannot be launched. */
+.campaign-chapter{cursor:pointer;transition:border-color .16s ease,background .16s ease}
+.campaign-chapter:focus-visible{outline:2px solid var(--cyan);outline-offset:2px}
+.campaign-chapter.is-locked{border-style:dashed;background:#101519}
+.campaign-chapter.is-unavailable{opacity:.76}
+.campaign-chapter.is-locked .chapter-number{color:#c5a77a;border-color:#65543a}
+.campaign-chapter.is-locked small{color:#d3b987}
+.chapter-launch-card{max-height:min(86dvh,680px);overflow:auto;overscroll-behavior:contain}
+.chapter-launch-card button:disabled,.campaign-foot button:disabled{opacity:.5;cursor:not-allowed;filter:saturate(.45)}
+
+
+/* Final campaign cinematic: only available after all 36 chapters are complete. */
+.finale-overlay{z-index:100;padding:clamp(10px,3vw,28px);background:radial-gradient(ellipse at 50% 38%,#14252ceF 0%,#05090df5 68%)}
+.finale-card{position:relative;isolation:isolate;overflow:hidden;width:min(900px,100%);min-height:min(620px,88dvh);display:grid;grid-template-columns:minmax(0,1.05fr) minmax(260px,.95fr);border:1px solid #354950;border-radius:20px;background:linear-gradient(145deg,#101c22,#060a0e 70%);box-shadow:0 24px 100px #000c}
+.finale-sky{position:relative;min-height:340px;overflow:hidden;background:radial-gradient(ellipse at 50% 72%,#254a4a 0%,#13292f 30%,#091116 74%)}
+.finale-sky:before,.finale-sky:after{content:"";position:absolute;left:-15%;right:-15%;height:55%;border:1px solid #9ac9bd35;border-radius:50%;transform:rotate(-17deg)}
+.finale-sky:before{bottom:-20%;box-shadow:0 0 0 24px #9ac9bd08,0 0 0 50px #9ac9bd07,0 0 0 78px #9ac9bd06}
+.finale-sky:after{bottom:-33%;transform:rotate(15deg)}
+.finale-orb{position:absolute;display:block;border-radius:50%;filter:blur(.2px);animation:finale-breathe 4s ease-in-out infinite alternate}
+.orb-one{width:78px;height:78px;top:18%;left:28%;background:radial-gradient(circle at 35% 30%,#e1fff0,#8bd4c1 30%,#4e938e 60%,#31565e);box-shadow:0 0 48px #77cbbb66}
+.orb-two{width:18px;height:18px;top:32%;right:22%;background:#e6d9a5;box-shadow:0 0 28px #e6d9a566;animation-delay:-1.5s}
+.finale-thread{position:absolute;left:15%;right:15%;top:48%;height:2px;background:linear-gradient(90deg,transparent,#a5ead2,#f1d8a0,#a5ead2,transparent);box-shadow:0 0 18px #9ee8d466;transform:rotate(-16deg)}
+.finale-silhouette{position:absolute;bottom:18%;width:18px;height:58px;border-radius:50% 50% 5px 5px;background:#091013;box-shadow:0 -10px 0 -2px #091013}
+.player-silhouette{left:42%;transform:rotate(-4deg);background:#82d5a7;box-shadow:0 0 18px #82d5a755}
+.other-silhouette{left:53%;transform:rotate(4deg);background:#d98ba0;box-shadow:0 0 18px #d98ba055}
+.finale-copy{align-self:center;padding:clamp(22px,4vw,42px)}
+.finale-copy h2{margin:12px 0;font-size:clamp(28px,4.5vw,44px);line-height:1.02;letter-spacing:-.05em;color:#eef7f4}
+.finale-copy p{min-height:86px;margin:0 0 20px;color:#b9c9c9;font-size:14px;line-height:1.75}
+.finale-progress{height:3px;overflow:hidden;margin:0 0 18px;border-radius:99px;background:#29383e}
+.finale-progress span{display:block;width:20%;height:100%;background:linear-gradient(90deg,#81d5b0,#e9d39c);transition:width .45s ease}
+.finale-controls{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.finale-controls .primary-action{grid-column:1/-1}
+.finale-controls .drawer-action{font-size:9px;min-height:42px}
+@keyframes finale-breathe{from{transform:translateY(0) scale(.96);opacity:.8}to{transform:translateY(-9px) scale(1.04);opacity:1}}
+@media(max-width:650px){.finale-card{grid-template-columns:1fr;grid-template-rows:minmax(180px,31dvh) auto;min-height:min(760px,94dvh);max-height:94dvh;overflow:auto}.finale-sky{min-height:180px}.finale-copy{padding:20px}.finale-copy p{min-height:0;font-size:13px}.finale-controls{gap:7px}.finale-controls .drawer-action{padding:9px 7px;font-size:8px}}
+@media(prefers-reduced-motion:reduce){.finale-orb{animation:none}.finale-progress span{transition:none}}

@@ -93,10 +93,7 @@
   function loadCampaign() {
     try { const d = JSON.parse(localStorage.getItem(CAMPAIGN_KEY) || '{}'); if (d.version === 1 && Array.isArray(d.completed)) completedCampaignChapters = [...new Set(d.completed.filter(n => Number.isInteger(n) && n >= 1 && n <= 36))]; } catch { completedCampaignChapters = []; }
   }
-  function markComplete() {
-    if (!completedCampaignChapters.includes(2)) completedCampaignChapters.push(2);
-    try { localStorage.setItem(CAMPAIGN_KEY, JSON.stringify({ version: 1, completed: completedCampaignChapters })); } catch {}
-  }
+  function markComplete(){ window.v2MarkCampaignChapterComplete?.(2); }
   function updateHud() {
     $('branchCount').textContent = state.branch ? `CHOIX · ${state.branch}` : 'CHOIX · NON FAIT';
     $('gateStatus').textContent = state.gateOpen ? 'PORTE : OUVERTE' : 'PORTE : VERROUILLÉE';
