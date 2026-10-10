@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#080c10">
+  <title>L’Autre Joueur — Prototype V2 · Chapitre 6</title>
+  <link rel="stylesheet" href="v2-prototype.css">
+</head>
+<body>
+  <main id="app">
+    <header class="topbar">
+      <button id="menuButton" class="small-button menu-toggle" aria-label="Ouvrir le menu de jeu" aria-expanded="false">☰ MENU</button>
+      <div class="title"><span>PROTOTYPE V2 · CHAPITRE 06</span><strong>DISTANCE / ABANDON</strong></div>
+      <button id="mapToggle" class="small-button" aria-expanded="false">CARTE</button>
+      <button id="pauseButton" class="small-button" aria-pressed="false">PAUSE</button>
+    </header>
+    <section class="brief" aria-label="Objectif du chapitre">
+      <div><span class="label">MISSION</span><strong id="objective">Active les relais A et B : demande à l’Autre de tenir B ou active-le toi-même, puis rejoins A. La séparation peut révéler un refuge.</strong></div>
+      <div class="status"><span id="otherStatus">L’AUTRE : AVEC TOI</span><span id="gateStatus">PORTE : VERROUILLÉE</span></div>
+    </section>
+    <section class="stage" aria-label="Labyrinthe jouable">
+      <canvas id="world" aria-label="Labyrinthe. Le point vert représente le joueur et le point rose l’Autre."></canvas>
+      <div id="toast" role="status" aria-live="polite"></div>
+      <canvas id="minimap" aria-label="Carte révélée progressivement" hidden></canvas>
+      <div class="touch-controls">
+        <div id="joystick" role="group" aria-label="Joystick de déplacement"><div id="stick"></div></div>
+        <button id="interact" aria-label="Interagir avec le mécanisme à proximité">INTERAGIR</button>
+      </div>
+      <div class="legend"><span><i class="dot player"></i>TOI</span><span><i class="dot other"></i>L’AUTRE</span><span>VOIE SÉPARÉE · RELAIS A + B</span></div>
+    </section>
+    <footer>
+      <span>Clavier : flèches / ZQSD / WASD · E : interagir · P : pause</span>
+      <span>Prototype isolé : la sauvegarde V1 reste intacte.</span>
+      <button id="reset" class="text-button">Réinitialiser ce prototype</button>
+    </footer>
+    <div id="drawerScrim" class="drawer-scrim" aria-hidden="true"></div>
+    <aside id="sideDrawer" class="side-drawer" role="dialog" aria-modal="true" aria-label="Menu du jeu" aria-hidden="true" tabindex="-1">
+      <div class="drawer-head"><div><span class="drawer-kicker">L’AUTRE JOUEUR · V2</span><h2>Menu de jeu</h2></div><button id="drawerClose" class="drawer-close" aria-label="Fermer le menu">×</button></div>
+      <div class="drawer-chapter"><span>CHAPITRE PROTOTYPE · 06</span><strong>DISTANCE / ABANDON</strong></div>
+      <section class="drawer-section"><span class="drawer-label">OBJECTIF</span><p id="drawerObjective">Active les relais A et B. Demande à l’Autre de tenir B, ou active-le toi-même, puis rejoins A.</p><small id="drawerObjectiveState">EN COURS</small></section>
+      <section class="drawer-section"><span class="drawer-label">ÉTAT DU LABYRINTHE</span><p id="drawerOtherStatus">L’AUTRE : AVEC TOI</p><p id="drawerGateStatus">PORTE : VERROUILLÉE</p><p id="drawerProgress">CARTE : EN COURS D’EXPLORATION</p><p id="drawerJourney">PARCOURS : VOUS ÊTES RESTÉS ENSEMBLE</p></section>
+      <section class="drawer-section"><span class="drawer-label">COMMENT JOUER</span><p>Déplace-toi avec le joystick ou les flèches, ZQSD ou WASD. Au terminal central, appuie sur <b>INTERAGIR</b> pour demander à l’Autre de tenir B. Tu peux aussi rejoindre B et l’activer toi-même, puis te rendre sur A.</p><p>Le refuge facultatif dans la galerie nord ne se révèle que pendant une séparation.</p></section>
+      <div class="drawer-actions"><button id="drawerResume" class="drawer-action primary-action">REPRENDRE</button><button id="drawerCampaign" class="drawer-action">VOIR LA CAMPAGNE · 36 CHAPITRES</button><button id="drawerMap" class="drawer-action">AFFICHER / MASQUER LA CARTE</button><button id="drawerPause" class="drawer-action">METTRE EN PAUSE</button><button id="drawerRestart" class="drawer-action">RECOMMENCER LE PROTOTYPE</button><button id="drawerHome" class="drawer-action">RETOUR À L’ACCUEIL V2</button><a id="drawerExit" class="drawer-action exit-action" href="index.html">RETOURNER AU JEU V1</a></div>
+    </aside>
+    <div id="pauseOverlay" class="modal-overlay" aria-hidden="true">
+      <section class="modal-card" role="dialog" aria-modal="true" aria-labelledby="pauseTitle">
+        <span class="drawer-kicker">LE LABYRINTHE ATTEND</span><h2 id="pauseTitle">Jeu en pause</h2><p>Ta progression est sauvegardée dans le prototype V2.</p>
+        <button id="resumeButton" class="drawer-action primary-action">REPRENDRE</button><button id="pauseMenuButton" class="drawer-action">OUVRIR LE MENU</button>
+      </section>
+    </div>
+    <div id="introOverlay" class="modal-overlay intro-overlay" aria-hidden="true">
+      <section class="modal-card intro-card" role="dialog" aria-modal="true" aria-labelledby="introTitle">
+        <span class="drawer-kicker">PROTOTYPE V2 · CHAPITRE 06</span><h1 id="introTitle">L’AUTRE JOUEUR</h1><p class="intro-tagline">Tu ne traverseras pas ce labyrinthe seul.</p>
+        <div class="intro-summary"><b>DISTANCE / ABANDON</b><span>Explore les galeries. Active les deux relais avec l’aide de l’Autre ou seul ; une séparation peut révéler un refuge caché.</span></div>
+        <p id="introMemory" class="intro-memory">Ta progression V2 est séparée de la sauvegarde V1.</p>
+        <button id="startButton" class="drawer-action primary-action">COMMENCER</button><a class="drawer-action" href="index.html">RETOURNER AU JEU V1</a>
+        <button id="introCampaign" class="drawer-action">DÉCOUVRIR LA CAMPAGNE · 36 CHAPITRES</button>
+      </section>
+    </div>
+    <div id="campaignOverlay" class="modal-overlay campaign-overlay" aria-hidden="true">
+      <section class="campaign-card" role="dialog" aria-modal="true" aria-labelledby="campaignTitle">
+        <header class="campaign-head"><div><span class="drawer-kicker">L’AUTRE JOUEUR · V2</span><h2 id="campaignTitle">La campagne</h2><p id="campaignProgress">36 chapitres prévus · 7 prototypes jouables</p></div><button id="campaignClose" class="drawer-close" aria-label="Fermer la campagne">×</button></header>
+        <p class="campaign-note">Les thèmes et objectifs prévus des 36 chapitres sont listés ici. Dans cette version, les chapitres 1 à 7 disposent chacun d’un prototype jouable ; les chapitres 8 à 36 restent à intégrer.</p>
+        <div id="campaignChapters" class="campaign-chapters" aria-label="Liste des chapitres"></div>
+        <div class="campaign-foot"><button id="campaignPlay" class="drawer-action primary-action">JOUER AU PROTOTYPE DU CHAPITRE 6</button><button id="campaignBack" class="drawer-action">RETOUR</button></div>
+      </section>
+    </div>
+    <div id="chapterLaunchOverlay" class="modal-overlay chapter-launch-overlay" aria-hidden="true">
+      <section class="modal-card chapter-launch-card" role="dialog" aria-modal="true" aria-labelledby="chapterLaunchTitle">
+        <span id="chapterLaunchKicker" class="drawer-kicker">CHAPITRE JOUABLE</span>
+        <h2 id="chapterLaunchTitle">Choisir un chapitre</h2>
+        <p id="chapterLaunchDescription">Consulte son objectif avant de commencer.</p>
+        <button id="chapterLaunchPlay" class="drawer-action primary-action">JOUER LE CHAPITRE</button>
+        <button id="chapterLaunchClose" class="drawer-action">FERMER</button>
+      </section>
+    </div>
+    <div id="restartOverlay" class="modal-overlay restart-overlay" aria-hidden="true">
+      <section class="modal-card" role="dialog" aria-modal="true" aria-labelledby="restartTitle">
+        <span class="drawer-kicker">NOUVEAU DÉPART</span><h2 id="restartTitle">Recommencer le chapitre 6 ?</h2>
+        <p>La progression de ce prototype sera effacée. Le suivi de campagne et la sauvegarde de la V1 resteront intacts.</p>
+        <button id="confirmRestart" class="drawer-action primary-action">EFFACER LA PROGRESSION ET RECOMMENCER</button>
+        <button id="cancelRestart" class="drawer-action">ANNULER</button>
+      </section>
+    </div>
+    <div id="completeOverlay" class="modal-overlay" aria-hidden="true">
+      <section class="modal-card" role="dialog" aria-modal="true" aria-labelledby="completeTitle">
+        <span class="drawer-kicker">L’AUTRE JOUEUR · CHAPITRE 06</span><h2 id="completeTitle">Vous avez trouvé la sortie.</h2><p id="completeSummary">Le prototype a mémorisé votre parcours.</p>
+        <button id="completeCampaign" class="drawer-action primary-action">VOIR LA CAMPAGNE</button><button id="completeClose" class="drawer-action">REJOUER LE CHAPITRE 6</button><a class="drawer-action" href="index.html">RETOURNER AU JEU V1</a>
+      </section>
+    </div>
+  </main>
+  <script src="v2-prototype.js"></script>
+</body>
+</html>

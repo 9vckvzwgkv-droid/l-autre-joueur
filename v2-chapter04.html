@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#080c10">
+  <title>L’Autre Joueur — V2 · Chapitre 4 : Attente</title>
+  <link rel="stylesheet" href="v2-prototype.css">
+</head>
+<body>
+  <main id="app">
+    <header class="topbar">
+      <button id="menuButton" class="small-button menu-toggle" aria-label="Ouvrir le menu de jeu" aria-expanded="false">☰ MENU</button>
+      <div class="title"><span>V2 · CHAPITRE 04</span><strong>ATTENTE</strong></div>
+      <button id="mapToggle" class="small-button" aria-expanded="false">CARTE</button>
+      <button id="pauseButton" class="small-button" aria-pressed="false">PAUSE</button>
+    </header>
+    <section class="brief" aria-label="Objectif du chapitre">
+      <div><span class="label">MISSION</span><strong id="objective">Trouve la dalle du carrefour et reste dessus jusqu’à ce que l’Autre atteigne la seconde dalle.</strong></div>
+      <div class="status"><span id="otherStatus">L’AUTRE : AVEC TOI</span><span id="gateStatus">PORTE : VERROUILLÉE</span></div>
+    </section>
+    <section class="stage" aria-label="Labyrinthe jouable">
+      <canvas id="world" aria-label="Labyrinthe du chapitre Attente. Le point vert est le joueur, le point rose est l’Autre."></canvas>
+      <div id="toast" role="status" aria-live="polite"></div>
+      <canvas id="minimap" aria-label="Carte révélée progressivement" hidden></canvas>
+      <div class="touch-controls">
+        <div id="joystick" role="group" aria-label="Joystick de déplacement"><div id="stick"></div></div>
+        <button id="interact" aria-label="Interagir avec la niche ou la sortie">INTERAGIR</button>
+      </div>
+      <div class="legend"><span><i class="dot player"></i>TOI</span><span><i class="dot other"></i>L’AUTRE</span><span id="branchCount">DALLES · EN ATTENTE</span></div>
+    </section>
+    <footer><span>Clavier : flèches / ZQSD / WASD · E : interagir · P : pause</span><span>Progression V2 indépendante de la V1.</span><button id="reset" class="text-button">Réinitialiser le chapitre</button></footer>
+    <div id="drawerScrim" class="drawer-scrim" aria-hidden="true"></div>
+    <aside id="sideDrawer" class="side-drawer" role="dialog" aria-modal="true" aria-label="Menu du jeu" aria-hidden="true" tabindex="-1">
+      <div class="drawer-head"><div><span class="drawer-kicker">L’AUTRE JOUEUR · V2</span><h2>Menu de jeu</h2></div><button id="drawerClose" class="drawer-close" aria-label="Fermer le menu">×</button></div>
+      <div class="drawer-chapter"><span>CHAPITRE 04 · ATTENTE</span><strong>Les portes qui respirent</strong></div>
+      <section class="drawer-section"><span class="drawer-label">OBJECTIF</span><p id="drawerObjective">Reste sur la dalle du carrefour pour que l’Autre comprenne le signal et rejoigne la seconde dalle.</p><small id="drawerObjectiveState">EN COURS</small></section>
+      <section class="drawer-section"><span class="drawer-label">ÉTAT DU PARCOURS</span><p id="drawerOtherStatus">L’AUTRE : AVEC TOI</p><p id="drawerGateStatus">PORTE : VERROUILLÉE</p><p id="drawerProgress">SYNCHRONISATION : EN ATTENTE</p><p id="drawerJourney">PARCOURS : À DÉCOUVRIR</p></section>
+      <section class="drawer-section"><span class="drawer-label">COMMENT JOUER</span><p>Reste sur la dalle sonore du carrefour. L’Autre doit comprendre le signal et rejoindre la dalle au nord-est. Les deux dalles doivent résonner en même temps.</p><p>Les portes battantes suivent un cycle de huit secondes : le sol lumineux indique quand le passage est libre. Cherche le refuge secret dans l’aile ouest pour contourner les portes.</p></section>
+      <div class="drawer-actions"><button id="drawerResume" class="drawer-action primary-action">REPRENDRE</button><button id="drawerMap" class="drawer-action">AFFICHER / MASQUER LA CARTE</button><button id="drawerPause" class="drawer-action">METTRE EN PAUSE</button><button id="drawerRestart" class="drawer-action">RECOMMENCER LE CHAPITRE</button><a id="drawerCampaign" class="drawer-action" href="v2-prototype.html#campagne">RETOUR À LA CAMPAGNE</a><a class="drawer-action exit-action" href="index.html">RETOURNER AU JEU V1</a></div>
+    </aside>
+    <div id="pauseOverlay" class="modal-overlay" aria-hidden="true"><section class="modal-card" role="dialog" aria-modal="true" aria-labelledby="pauseTitle"><span class="drawer-kicker">LE LABYRINTHE ATTEND</span><h2 id="pauseTitle">Jeu en pause</h2><p>Ta progression est sauvegardée dans le chapitre 4.</p><button id="resumeButton" class="drawer-action primary-action">REPRENDRE</button><button id="pauseMenuButton" class="drawer-action">OUVRIR LE MENU</button></section></div>
+    <div id="introOverlay" class="modal-overlay intro-overlay" aria-hidden="true"><section class="modal-card intro-card" role="dialog" aria-modal="true" aria-labelledby="introTitle"><span class="drawer-kicker">CAMPAGNE V2 · CHAPITRE 04</span><h1 id="introTitle">L’AUTRE JOUEUR</h1><p class="intro-tagline">Le temps laissé à l’Autre peut changer votre parcours.</p><div class="intro-summary"><b>ATTENTE</b><span>Reste sur la dalle du carrefour pour que l’Autre comprenne le signal et rejoigne la seconde dalle. L’Autre peut t’aider si tu prends le temps de lui demander.</span></div><p id="introMemory" class="intro-memory">Ta progression V2 est séparée de la sauvegarde V1.</p><button id="startButton" class="drawer-action primary-action">COMMENCER</button><a id="introCampaign" class="drawer-action" href="v2-prototype.html#campagne">RETOUR À LA CAMPAGNE</a></section></div>
+    <div id="restartOverlay" class="modal-overlay restart-overlay" aria-hidden="true"><section class="modal-card" role="dialog" aria-modal="true" aria-labelledby="restartTitle"><span class="drawer-kicker">NOUVEAU DÉPART</span><h2 id="restartTitle">Recommencer le chapitre 4 ?</h2><p>La progression de ce chapitre sera effacée. Les autres chapitres et la mémoire de la V1 resteront intacts.</p><button id="confirmRestart" class="drawer-action primary-action">EFFACER LA PROGRESSION ET RECOMMENCER</button><button id="cancelRestart" class="drawer-action">ANNULER</button></section></div>
+    <div id="completeOverlay" class="modal-overlay" aria-hidden="true"><section class="modal-card" role="dialog" aria-modal="true" aria-labelledby="completeTitle"><span class="drawer-kicker">L’AUTRE JOUEUR · CHAPITRE 04</span><h2 id="completeTitle">Vous avez trouvé la sortie.</h2><p id="completeSummary">La synchronisation et tes décisions ont été mémorisées.</p><a id="completeCampaign" class="drawer-action primary-action" href="v2-prototype.html#campagne">RETOUR À LA CAMPAGNE</a><button id="completeClose" class="drawer-action">REJOUER LE CHAPITRE 4</button></section></div>
+  </main>
+  <script src="v2-chapter04.js"></script>
+</body>
+</html>
