@@ -61,3 +61,7 @@ Chaque chapitre doit posséder un plan réellement distinct (pas seulement un d�
 
 ITÉRATION SUIVANTE — AUDIT D’UNICITÉ
 Le chapitre 4 (ATTENTE) possède une nouvelle géométrie en anneau asymétrique. Consulter AUDIT_UNICITE_CARTES_PHASE13.md pour les contrôles effectués et les limites connues. Les 36 cartes ne sont pas encore toutes réalisées ou validées.
+
+
+CHAPITRE 14 — COOPÉRATION
+Le prototype du chapitre 14 est dans v2-chapter14.html / v2-chapter14.js. Publier tous les fichiers décompressés à la racine de GitHub Pages, pas le ZIP. Voir RAPPORT_CHAPITRE14.md pour les contrôles et limites.
