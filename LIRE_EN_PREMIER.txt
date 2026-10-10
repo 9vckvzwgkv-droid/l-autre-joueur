@@ -1,0 +1,63 @@
+L’AUTRE JOUEUR — prototype de campagne V2, phase 2 : cinématique finale
+
+POUR OUVRIR LA V2
+Ouvre v2-prototype.html. Depuis l’accueil, sélectionne « Découvrir la campagne »
+pour consulter les 36 thèmes et objectifs. Tu peux lancer les chapitres 1 à 12 depuis leurs fiches de campagne. Le menu
+latéral ☰ MENU permet aussi d’ouvrir la campagne depuis les chapitres jouables.
+Pour recommencer, ouvre le menu et choisis « Recommencer le prototype » ; confirme
+dans la fenêtre intégrée au jeu. « Annuler » ferme la confirmation sans perdre la partie.
+
+ÉTAT DE CETTE VERSION
+Cette archive contient douze prototypes V2 séparés : les chapitres 1 à 12, de « Trace » à « Confiance ». Les chapitres 13 à 36 restent à intégrer ; ils ne sont pas présentés comme jouables. La présence d’un prototype ne signifie pas à elle seule que tous les critères de conception sont validés : voir CONCEPTION_36_LABYRINTHES.md et les rapports de contrôle.
+
+Les sauvegardes des chapitres 1 à 12 sont séparées entre elles. Le suivi de campagne
+V2 leur est commun et indépendant de la V1. Recommencer efface uniquement la partie
+du chapitre ouvert. Pour ouvrir la V1, ouvre index.html. Ses fichiers sont conservés.
+
+RAPPORT
+Dans la campagne, clique directement sur une fiche jouable pour ouvrir sa fenêtre.
+« Jouer le chapitre » lance le niveau ; « Fermer » revient à la liste des chapitres.
+
+Consulte RAPPORT_PHASE07.md et les rapports RAPPORT_ITERATION_CHAPITRE03.md à RAPPORT_ITERATION_CHAPITRE09.md pour les changements et les résultats des contrôles.
+Les simulations ne remplacent pas un essai dans Safari sur Mac ou iPhone.
+
+
+MISE À JOUR — CHAPITRE 4 ATTENTE
+Ouvrir v2-prototype.html, sélectionner le chapitre 4, puis lancer ATTENTE. Le chapitre utilise sa propre sauvegarde et n’altère pas la V1. Voir RAPPORT_ITERATION_CHAPITRE04.md pour les ajouts et limites de validation.
+
+
+MISE À JOUR CHAPITRE 5 : ouvrir v2-prototype.html et sélectionner le chapitre 05 — MIROIR, ou ouvrir directement v2-chapter05.html. Le chapitre possède une sauvegarde indépendante.
+
+
+MISE À JOUR — CHAPITRE 6 DISTANCE / ABANDON
+Ouvrir v2-prototype.html, sélectionner le chapitre 06 et lancer le niveau. La décision coopérer/partir seul dispose de sa propre sauvegarde. Voir RAPPORT_ITERATION_CHAPITRE06.md.
+
+
+MISE À JOUR — CHAPITRE 7 CHOIX
+Ouvre v2-prototype.html et sélectionne le chapitre 07 — CHOIX, ou ouvre directement v2-chapter07.html. Trois branches, trois indices, un raccourci lié à la décision initiale, une fausse impasse annoncée par des fissures et une niche facultative. Voir RAPPORT_ITERATION_CHAPITRE07.md. Les contrôles statiques sont effectués ; une partie complète sur Safari/iPhone reste à tester.
+
+
+CHAPITRE 9 — OBSERVATION
+Le chapitre 9 dispose désormais de son propre labyrinthe, de trois postes d’observation, d’une patrouille autonome, d’un panneau de séquence, d’une galerie à fermeture cyclique avec détour de retour et d’un poste secret. La progression est sauvegardée séparément de la V1.
+
+
+CONTRÔLES CHAPITRE 9
+La syntaxe JS est vérifiée, les identifiants HTML et références locales sont contrôlés, la carte a été vérifiée pour la connectivité des postes et de la sortie avec les deux états de la galerie. Le lancement réel dans Chromium n’a pas été confirmé : le processus de test sans interface a dépassé le délai prévu. Un essai navigateur réel, en particulier Safari/iPhone, reste nécessaire.
+
+
+MISE À JOUR PROGRESSION SÉQUENTIELLE
+- Le chapitre 10 est présent dans cette archive.
+- Le menu affiche les détails des 36 chapitres ; seuls les prototypes existants et débloqués peuvent être lancés.
+- Voir RAPPORT_PROGRESSION_SEQUENTIELLE.md pour les modifications et limites vérifiées.
+
+
+MISE À JOUR — CINÉMATIQUE FINALE ET PROGRESSION
+Le marqueur de fin commun refuse d'enregistrer un chapitre si le précédent n'est pas terminé. Une fois les 36 chapitres terminés, il redirige vers la cinématique finale. Celle-ci comprend cinq scènes, une progression automatique, les commandes continuer/pause/passer, un motif sonore activable, et la possibilité de la revoir depuis la campagne. Les chapitres 12 à 36 n'étant pas encore jouables, la fin n'est pas accessible au terme d'une partie normale dans cette version. Voir RAPPORT_CINEMATIQUE_FINALE.md.
+
+
+RÈGLE DE CONCEPTION NON NÉGOCIABLE — 36 LABYRINTHES
+Chaque chapitre doit posséder un plan réellement distinct (pas seulement un décor ou des couleurs différents), une énigme propre avec indices observables, un piège annoncé et récupérable, et un secret facultatif. Chaque plan doit être vérifié pour la connectivité départ-sortie, les portes/verrous et les itinéraires alternatifs. Les 36 chapitres restent dans l’ordre prévu ; la cinématique finale ne se déclenche qu’après leur achèvement. Voir CONCEPTION_36_LABYRINTHES.md, référence de conception issue du plan de travail ChatGPT.
+
+
+ITÉRATION SUIVANTE — AUDIT D’UNICITÉ
+Le chapitre 4 (ATTENTE) possède une nouvelle géométrie en anneau asymétrique. Consulter AUDIT_UNICITE_CARTES_PHASE13.md pour les contrôles effectués et les limites connues. Les 36 cartes ne sont pas encore toutes réalisées ou validées.
