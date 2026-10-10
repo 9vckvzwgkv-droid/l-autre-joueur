@@ -1,7 +1,11 @@
 CORRECTION DU LANCEMENT GITHUB PAGES
 
-Le fichier index.html est désormais le point d’entrée V2 et redirige vers v2-prototype.html.
+Le fichier index.html est le point d’entrée public et redirige vers v2-prototype.html#campagne afin d’afficher directement le menu de campagne, au lieu de l’introduction du chapitre 6.
 L’ancienne version est conservée dans v1.html, avec game.js et style.css inchangés.
 Les liens « RETOURNER AU JEU V1 » des pages V2 pointent maintenant vers v1.html.
 
 Pour publier : téléversez le CONTENU de cette archive à la racine du dépôt (pas le ZIP lui-même et pas un dossier parent), remplacez les fichiers existants, puis validez le commit. Dans GitHub Pages, vérifiez Settings > Pages et la branche/dossier publiés. Après publication, ouvrez l’URL du site en navigation privée ou faites un rechargement forcé.
+
+
+DIAGNOSTIC DE CETTE ITÉRATION
+Le site public servait déjà index.html V2, mais son URL cible ouvrait l’introduction du prototype du chapitre 6. Le fichier v2-prototype.html annonçait aussi encore 11 prototypes alors que le code de campagne référence les chapitres 1 à 12. Le correctif aligne le point d’entrée sur #campagne, corrige le texte de comptage et évite d’afficher l’introduction du chapitre 6 derrière la fenêtre de campagne. Après publication, vérifier que la page d’accueil affiche immédiatement « La campagne » et « 12 prototypes intégrés ».

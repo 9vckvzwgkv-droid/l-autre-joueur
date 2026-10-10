@@ -932,9 +932,14 @@
     $('completeOverlay').classList.add('active'); $('completeOverlay').setAttribute('aria-hidden', 'false');
   }
   if (state.events.length) toast('Progression du prototype restaurée. La sauvegarde V1 est séparée.');
-  showIntro();
-  if (location.hash === '#campagne') openCampaign();
-  if (location.hash === '#finale') { if (campaignFullyComplete()) openFinale(); else { openCampaign(); toast('La cinématique finale reste verrouillée jusqu’à la fin des 36 chapitres.', 4200); } }
+  if (location.hash === '#campagne') {
+    openCampaign();
+  } else if (location.hash === '#finale') {
+    if (campaignFullyComplete()) openFinale();
+    else { openCampaign(); toast('La cinématique finale reste verrouillée jusqu’à la fin des 36 chapitres.', 4200); }
+  } else {
+    showIntro();
+  }
 
   function frame(now) {
     requestAnimationFrame(frame);

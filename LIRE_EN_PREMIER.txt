@@ -12,7 +12,7 @@ Cette archive contient douze prototypes V2 séparés : les chapitres 1 à 12, de
 
 Les sauvegardes des chapitres 1 à 12 sont séparées entre elles. Le suivi de campagne
 V2 leur est commun et indépendant de la V1. Recommencer efface uniquement la partie
-du chapitre ouvert. Pour ouvrir la V1, ouvre index.html. Ses fichiers sont conservés.
+du chapitre ouvert. Pour ouvrir la V1, ouvre v1.html. Le point d’entrée index.html mène à la campagne V2. Ses fichiers sont conservés.
 
 RAPPORT
 Dans la campagne, clique directement sur une fiche jouable pour ouvrir sa fenêtre.
