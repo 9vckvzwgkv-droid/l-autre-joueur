@@ -1,7 +1,7 @@
 # L’AUTRE JOUEUR V2.0 — Phase 01
 ## Conception des 36 labyrinthes
 
-**Statut : document de conception évolutif. Les chapitres 1 à 12 possèdent des prototypes séparés dans cette archive ; les chapitres 13 à 36 restent à intégrer. Le verrouillage séquentiel et une première cinématique de fin sont présents côté V2, mais la cinématique ne peut être atteinte normalement qu’une fois les 36 chapitres jouables.**
+**Statut : document de conception évolutif. Les chapitres 1 à 13 possèdent des prototypes séparés dans cette archive ; les chapitres 14 à 36 restent à intégrer. Le verrouillage séquentiel et une première cinématique de fin sont présents côté V2, mais la cinématique ne peut être atteinte normalement qu’une fois les 36 chapitres jouables.**
 
 Cette proposition conserve les 36 chapitres et leur ordre. Chaque chapitre garde son identité narrative et reçoit son propre labyrinthe, conçu à la main. Le projet ne devient pas un labyrinthe unique partagé par toute la campagne.
 
@@ -353,7 +353,7 @@ Le chapitre 6 (DISTANCE / ABANDON) est le meilleur prototype : il combine grande
 - Les énigmes coopératives auront une résolution réellement à deux, avec une solution de secours moins directe pour préserver l’accessibilité de la campagne.
 - Le chapitre 6 est le prototype principal proposé pour éprouver séparation, coopération et mémoire.
 
-**Cette conception reste la référence pour les niveaux à intégrer. Les prototypes 1 à 12, le verrouillage séquentiel et l’infrastructure initiale de cinématique sont implémentés séparément ; ils ne valident pas encore la réalisation complète des 36 labyrinthes.**
+**Cette conception reste la référence pour les niveaux à intégrer. Les prototypes 1 à 13, le verrouillage séquentiel et l’infrastructure initiale de cinématique sont implémentés séparément ; ils ne valident pas encore la réalisation complète des 36 labyrinthes.**
 
 ## État de réalisation — mise à jour chapitre 12
 - **Chapitre 12 — Confiance : géométrie dédiée réalisée.** Vestibule, salle de décision, ailes d'archives, chambre centrale, passerelles et salle du reflet organisés en boucles asymétriques. Les points de gameplay ont été contrôlés comme atteignables depuis le départ.

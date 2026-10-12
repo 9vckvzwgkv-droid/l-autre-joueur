@@ -1,17 +1,16 @@
-# Rapport d’itération — chapitre 13 : TRAHISON
+# Rapport — Chapitre 13 : TRAHISON
 
-## Intégration
-- Ajout de `v2-chapter13.html` et `v2-chapter13.js`.
-- Ajout du chapitre 13 aux routes jouables de la campagne.
-- Clé de sauvegarde dédiée au chapitre 13 ; la V1 et les chapitres précédents ne sont pas écrasés.
+## Implémentation
+- Labyrinthe déterministe en huit, avec deux ailes ouest, un carrefour central, deux galeries est et une sortie.
+- Deux pièces distinctes (△ et ○) à récupérer dans l’aile nord et l’aile sud.
+- Deux plaques gravées à observer pour confirmer l’ordre △ puis ○ avant l’assemblage du pont principal.
+- Pont principal fermé jusqu’à la résolution de l’énigme.
+- Pont provisoire au sud : une balise avertit de la rétraction après environ 4,2 secondes. Si le joueur est encore sur le pont, il est ramené sur la berge sans perdre ses objets ni sa progression.
+- Secret facultatif sous le pont : une note révèle que le verrou était déjà grippé, ce qui nuance l’impression de trahison.
+- L’Autre se dirige vers le mécanisme, peut échouer à tenir sa promesse si les marques ne lui ont pas été montrées, puis peut corriger son erreur après observation. Les faits sont mémorisés dans l’historique du chapitre.
+- Sauvegarde propre au chapitre 13 ; V1 et sauvegardes des autres chapitres non modifiées.
+- Le chapitre marque la progression de campagne avec `v2MarkCampaignChapterComplete(13)` et reste soumis au verrou séquentiel.
 
-## Mécaniques prévues dans cette itération
-- Deux pièces de pont et une marque réciproque ; ordre correct A → B.
-- Piège temporaire annoncé par balise, avec boucle de récupération.
-- Promesse de l’Autre mémorisée comme événement factuel en cas d’échec.
-- Cache facultative révélant la fissure de l’ancrage.
-
-## Validation
-- Les vérifications de syntaxe et de connectivité doivent être exécutées sur cette livraison.
-- Aucun test de jeu complet en navigateur n’est déclaré effectué.
-- Le chapitre ne doit pas être considéré comme final avant contrôle visuel et test manuel des parcours, de l’énigme, du piège et de la sauvegarde.
+## Contrôles effectués
+- À exécuter : contrôle syntaxique JavaScript, références locales et vérification de cohérence des liens de campagne.
+- Non revendiqué : test manuel complet en navigateur et test de publication GitHub Pages.

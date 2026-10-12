@@ -150,7 +150,7 @@
     saveCampaignProgress();
     return true;
   }
-  const playableCampaignChapters = new Set([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]);
+  const playableCampaignChapters = new Set([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]);
   function chapterUnlocked(number) {
     return number === 1 || completedCampaignChapters.includes(number) || completedCampaignChapters.includes(number - 1);
   }
@@ -173,7 +173,7 @@
     }).join('');
     const count = completedCampaignChapters.length;
     const next = nextCampaignChapter();
-    $('campaignProgress').textContent = `36 chapitres prévus · 12 prototypes intégrés · ${count}/36 terminés`;
+    $('campaignProgress').textContent = `36 chapitres prévus · 13 prototypes intégrés · ${count}/36 terminés`;
     $('campaignFinaleReplay').hidden = !campaignFullyComplete();
     $('campaignPlay').textContent = playableCampaignChapters.has(next)
       ? (completedCampaignChapters.includes(next) ? `REJOUER LE CHAPITRE ${next}` : `JOUER LE CHAPITRE ${next}`)
@@ -233,6 +233,7 @@
     else if (chapter === 10) location.href = 'v2-chapter10.html';
     else if (chapter === 11) location.href = 'v2-chapter11.html';
     else if (chapter === 12) location.href = 'v2-chapter12.html';
+    else if (chapter === 13) location.href = 'v2-chapter13.html';
   }
   function playCampaignPrototype() {
     const chapter = nextCampaignChapter();

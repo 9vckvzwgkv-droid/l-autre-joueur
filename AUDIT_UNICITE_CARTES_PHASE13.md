@@ -17,7 +17,7 @@ Les éléments de gameplay existants sont conservés : synchronisation des deux 
 
 Cette passe ne permet **pas** de certifier l’unicité des 36 labyrinthes. Les chapitres 3 à 6 possédaient auparavant une structure spatiale très proche malgré leurs objectifs différents ; le chapitre 4 est maintenant retravaillé, mais les chapitres 3, 5 et 6 doivent encore faire l’objet d’une comparaison et, si nécessaire, d’une refonte de leur topologie. Les chapitres 7 à 12 doivent aussi être comparés entre eux sur leurs graphes de salles, pas uniquement sur leurs titres et leurs coordonnées.
 
-Les chapitres 13 à 36 ne sont pas encore intégrés dans cette version du prototype. La règle du projet reste : aucune carte ne compte comme unique si elle ne possède pas sa propre géométrie, son énigme, son piège et son secret facultatif.
+Depuis cet audit, le chapitre 13 — TRAHISON a été ajouté. Les chapitres 14 à 36 restent à intégrer ; le chapitre 13 doit encore recevoir un test manuel complet en jeu. La règle du projet reste : aucune carte ne compte comme unique si elle ne possède pas sa propre géométrie, son énigme, son piège et son secret facultatif.
 
 ## Prochaine tâche recommandée
 
