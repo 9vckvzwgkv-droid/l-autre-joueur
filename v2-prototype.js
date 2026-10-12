@@ -150,7 +150,7 @@
     saveCampaignProgress();
     return true;
   }
-  const playableCampaignChapters = new Set([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17]);
+  const playableCampaignChapters = new Set([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]);
   function chapterUnlocked(number) {
     return number === 1 || completedCampaignChapters.includes(number) || completedCampaignChapters.includes(number - 1);
   }
@@ -173,7 +173,7 @@
     }).join('');
     const count = completedCampaignChapters.length;
     const next = nextCampaignChapter();
-    $('campaignProgress').textContent = `36 chapitres prévus · 17 prototypes intégrés · ${count}/36 terminés`;
+    $('campaignProgress').textContent = `36 chapitres prévus · 12 prototypes intégrés · ${count}/36 terminés`;
     $('campaignFinaleReplay').hidden = !campaignFullyComplete();
     $('campaignPlay').textContent = playableCampaignChapters.has(next)
       ? (completedCampaignChapters.includes(next) ? `REJOUER LE CHAPITRE ${next}` : `JOUER LE CHAPITRE ${next}`)
@@ -233,11 +233,6 @@
     else if (chapter === 10) location.href = 'v2-chapter10.html';
     else if (chapter === 11) location.href = 'v2-chapter11.html';
     else if (chapter === 12) location.href = 'v2-chapter12.html';
-    else if (chapter === 13) location.href = 'v2-chapter13.html';
-    else if (chapter === 14) location.href = 'v2-chapter14.html';
-    else if (chapter === 15) location.href = 'v2-chapter15.html';
-    else if (chapter === 16) location.href = 'v2-chapter16.html';
-    else if (chapter === 17) location.href = 'v2-chapter17.html';
   }
   function playCampaignPrototype() {
     const chapter = nextCampaignChapter();
@@ -937,14 +932,9 @@
     $('completeOverlay').classList.add('active'); $('completeOverlay').setAttribute('aria-hidden', 'false');
   }
   if (state.events.length) toast('Progression du prototype restaurée. La sauvegarde V1 est séparée.');
-  if (location.hash === '#campagne') {
-    openCampaign();
-  } else if (location.hash === '#finale') {
-    if (campaignFullyComplete()) openFinale();
-    else { openCampaign(); toast('La cinématique finale reste verrouillée jusqu’à la fin des 36 chapitres.', 4200); }
-  } else {
-    showIntro();
-  }
+  showIntro();
+  if (location.hash === '#campagne') openCampaign();
+  if (location.hash === '#finale') { if (campaignFullyComplete()) openFinale(); else { openCampaign(); toast('La cinématique finale reste verrouillée jusqu’à la fin des 36 chapitres.', 4200); } }
 
   function frame(now) {
     requestAnimationFrame(frame);

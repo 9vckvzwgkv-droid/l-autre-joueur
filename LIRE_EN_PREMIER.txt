@@ -12,7 +12,7 @@ Cette archive contient douze prototypes V2 séparés : les chapitres 1 à 12, de
 
 Les sauvegardes des chapitres 1 à 12 sont séparées entre elles. Le suivi de campagne
 V2 leur est commun et indépendant de la V1. Recommencer efface uniquement la partie
-du chapitre ouvert. Pour ouvrir la V1, ouvre v1.html. Le point d’entrée index.html mène à la campagne V2. Ses fichiers sont conservés.
+du chapitre ouvert. Pour ouvrir la V1, ouvre v1.html. Le fichier index.html lance la V2. Les fichiers de la V1 sont conservés.
 
 RAPPORT
 Dans la campagne, clique directement sur une fiche jouable pour ouvrir sa fenêtre.
@@ -52,7 +52,7 @@ MISE À JOUR PROGRESSION SÉQUENTIELLE
 
 
 MISE À JOUR — CINÉMATIQUE FINALE ET PROGRESSION
-Le marqueur de fin commun refuse d'enregistrer un chapitre si le précédent n'est pas terminé. Une fois les 36 chapitres terminés, il redirige vers la cinématique finale. Celle-ci comprend cinq scènes, une progression automatique, les commandes continuer/pause/passer, un motif sonore activable, et la possibilité de la revoir depuis la campagne. Les chapitres 12 à 36 n'étant pas encore jouables, la fin n'est pas accessible au terme d'une partie normale dans cette version. Voir RAPPORT_CINEMATIQUE_FINALE.md.
+Le marqueur de fin commun refuse d'enregistrer un chapitre si le précédent n'est pas terminé. Une fois les 36 chapitres terminés, il redirige vers la cinématique finale. Celle-ci comprend cinq scènes, une progression automatique, les commandes continuer/pause/passer, un motif sonore activable, et la possibilité de la revoir depuis la campagne. Les chapitres 13 à 36 n'étant pas encore jouables, la fin n'est pas accessible au terme d'une partie normale dans cette version. Voir RAPPORT_CINEMATIQUE_FINALE.md.
 
 
 RÈGLE DE CONCEPTION NON NÉGOCIABLE — 36 LABYRINTHES
@@ -61,7 +61,3 @@ Chaque chapitre doit posséder un plan réellement distinct (pas seulement un d�
 
 ITÉRATION SUIVANTE — AUDIT D’UNICITÉ
 Le chapitre 4 (ATTENTE) possède une nouvelle géométrie en anneau asymétrique. Consulter AUDIT_UNICITE_CARTES_PHASE13.md pour les contrôles effectués et les limites connues. Les 36 cartes ne sont pas encore toutes réalisées ou validées.
-
-
-CHAPITRE 14 — COOPÉRATION
-Le prototype du chapitre 14 est dans v2-chapter14.html / v2-chapter14.js. Publier tous les fichiers décompressés à la racine de GitHub Pages, pas le ZIP. Voir RAPPORT_CHAPITRE14.md pour les contrôles et limites.

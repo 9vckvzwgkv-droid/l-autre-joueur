@@ -1,7 +1,7 @@
 # L’AUTRE JOUEUR V2.0 — Phase 01
 ## Conception des 36 labyrinthes
 
-**Statut : document de conception évolutif. Les chapitres 1 à 12 possèdent des prototypes séparés dans cette archive ; le chapitre 13 est intégré et le chapitre 14 possède un prototype jouable à valider ; le chapitre 15 possède un prototype initial à valider ; les chapitres 16 à 36 restent à intégrer. Le verrouillage séquentiel et une première cinématique de fin sont présents côté V2, mais la cinématique ne peut être atteinte normalement qu’une fois les 36 chapitres jouables.**
+**Statut : document de conception évolutif. Les chapitres 1 à 12 possèdent des prototypes séparés dans cette archive ; les chapitres 13 à 36 restent à intégrer. Le verrouillage séquentiel et une première cinématique de fin sont présents côté V2, mais la cinématique ne peut être atteinte normalement qu’une fois les 36 chapitres jouables.**
 
 Cette proposition conserve les 36 chapitres et leur ordre. Chaque chapitre garde son identité narrative et reçoit son propre labyrinthe, conçu à la main. Le projet ne devient pas un labyrinthe unique partagé par toute la campagne.
 
@@ -370,13 +370,3 @@ Le chapitre 6 (DISTANCE / ABANDON) est le meilleur prototype : il combine grande
 
 - **Chapitre 5 — MIROIR :** prototype enrichi avec un piège de faux reflet à effet temporaire et une alcôve secrète spatialement reliée au miroir fissuré. Instructions, sauvegarde et mini-carte mises à jour.
 - **Statut :** intégration et contrôles statiques effectués ; test en navigateur et audit comparatif complet de la topologie encore requis. Cette étape ne valide pas les 36 chapitres dans leur ensemble.
-
-
-## Journal de réalisation — chapitre 13 : TRAHISON
-
-- **Topologie dédiée intégrée :** deux rives, deux ponts parallèles, un îlot central et une boucle de récupération.
-- **Énigme :** observer deux pièces et une marque réciproque ; l’ordre A → B aligne les marques et ouvre le pont. L’ordre incorrect est réessayable.
-- **Piège annoncé :** une balise prévient de la rétraction temporaire du pont provisoire ; le détour de récupération reste accessible et la progression n’est pas effacée.
-- **Autre :** il promet de tenir le contrepoids ; son échec est mémorisé comme un événement. Le joueur peut l’interroger et choisir de l’aider ou de poursuivre par le détour.
-- **Secret facultatif :** la cache sous le pont révèle l’ancrage fendu et explique la promesse échouée.
-- **État :** intégration et contrôles statiques à effectuer ; aucun test complet de jeu en navigateur n’est revendiqué ici. L’audit de connectivité automatisé et le test réel restent requis avant validation finale.
