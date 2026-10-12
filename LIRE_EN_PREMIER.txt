@@ -2,15 +2,15 @@ L’AUTRE JOUEUR — prototype de campagne V2, phase 2 : cinématique finale
 
 POUR OUVRIR LA V2
 Ouvre v2-prototype.html. Depuis l’accueil, sélectionne « Découvrir la campagne »
-pour consulter les 36 thèmes et objectifs. Tu peux lancer les chapitres 1 à 13 depuis leurs fiches de campagne. Le menu
+pour consulter les 36 thèmes et objectifs. Tu peux lancer les chapitres 1 à 14 depuis leurs fiches de campagne. Le menu
 latéral ☰ MENU permet aussi d’ouvrir la campagne depuis les chapitres jouables.
 Pour recommencer, ouvre le menu et choisis « Recommencer le prototype » ; confirme
 dans la fenêtre intégrée au jeu. « Annuler » ferme la confirmation sans perdre la partie.
 
 ÉTAT DE CETTE VERSION
-Cette archive contient treize prototypes V2 séparés : les chapitres 1 à 13, de « Trace » à « Trahison ». Les chapitres 14 à 36 restent à intégrer ; ils ne sont pas présentés comme jouables. La présence d’un prototype ne signifie pas à elle seule que tous les critères de conception sont validés : voir CONCEPTION_36_LABYRINTHES.md et les rapports de contrôle.
+Cette archive contient quatorze prototypes V2 séparés : les chapitres 1 à 14, de « Trace » à « Coopération ». Les chapitres 15 à 36 restent à intégrer ; ils ne sont pas présentés comme jouables. La présence d’un prototype ne signifie pas à elle seule que tous les critères de conception sont validés : voir CONCEPTION_36_LABYRINTHES.md et les rapports de contrôle.
 
-Les sauvegardes des chapitres 1 à 13 sont séparées entre elles. Le suivi de campagne
+Les sauvegardes des chapitres 1 à 14 sont séparées entre elles. Le suivi de campagne
 V2 leur est commun et indépendant de la V1. Recommencer efface uniquement la partie
 du chapitre ouvert. Pour ouvrir la V1, ouvre v1.html. Le fichier index.html lance la V2. Les fichiers de la V1 sont conservés.
 
@@ -52,7 +52,7 @@ MISE À JOUR PROGRESSION SÉQUENTIELLE
 
 
 MISE À JOUR — CINÉMATIQUE FINALE ET PROGRESSION
-Le marqueur de fin commun refuse d'enregistrer un chapitre si le précédent n'est pas terminé. Une fois les 36 chapitres terminés, il redirige vers la cinématique finale. Celle-ci comprend cinq scènes, une progression automatique, les commandes continuer/pause/passer, un motif sonore activable, et la possibilité de la revoir depuis la campagne. Les chapitres 14 à 36 n'étant pas encore jouables, la fin n'est pas accessible au terme d'une partie normale dans cette version. Voir RAPPORT_CINEMATIQUE_FINALE.md.
+Le marqueur de fin commun refuse d'enregistrer un chapitre si le précédent n'est pas terminé. Une fois les 36 chapitres terminés, il redirige vers la cinématique finale. Celle-ci comprend cinq scènes, une progression automatique, les commandes continuer/pause/passer, un motif sonore activable, et la possibilité de la revoir depuis la campagne. Les chapitres 15 à 36 n'étant pas encore jouables, la fin n'est pas accessible au terme d'une partie normale dans cette version. Voir RAPPORT_CINEMATIQUE_FINALE.md.
 
 
 RÈGLE DE CONCEPTION NON NÉGOCIABLE — 36 LABYRINTHES

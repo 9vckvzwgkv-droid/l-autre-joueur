@@ -16,6 +16,8 @@
 7. Attends que le workflow de publication se termine dans **Actions**.
 8. Teste en navigation privée ou avec un rechargement forcé.
 
+- Chapitre 15 : `v2-chapter15.html`
+
 ## URLs de contrôle
 - Accueil : https://9vckvzwgkv-droid.github.io/l-autre-joueur/
 - Campagne : https://9vckvzwgkv-droid.github.io/l-autre-joueur/v2-prototype.html#campagne
@@ -30,3 +32,8 @@
 
 ## Limites des contrôles
 Le contrôle syntaxique JavaScript et la vérification des références locales ne remplacent pas un test manuel en navigateur. Cette archive contient les chapitres 1 à 13 ; les chapitres 14 à 36 restent à développer et à valider individuellement. Le dépôt GitHub n’est pas modifié automatiquement par la création de cette archive.
+
+## Chapitre 14 — COOPÉRATION
+
+- Prototype : `v2-chapter14.html`
+- Les chapitres 1 à 14 sont présents dans cette archive ; les chapitres 15 à 36 restent à développer.

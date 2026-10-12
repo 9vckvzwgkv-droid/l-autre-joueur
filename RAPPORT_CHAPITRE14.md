@@ -1,24 +1,17 @@
-# Rapport d’itération — chapitre 14 : COOPÉRATION
+# Rapport de livraison — Chapitre 14 : COOPÉRATION
 
-## Intégration
-- Ajout de `v2-chapter14.html` et `v2-chapter14.js`, avec sauvegarde locale indépendante `otherPlayerChapter14SaveV2`.
-- Ajout du chapitre 14 à la liste de campagne et à la route de lancement.
-- Carte déterministe en neuf salles reliées par des passages, deux zones de commande éloignées et une passerelle centrale à trois paliers.
+## Implémentation
+- Labyrinthe déterministe de 92 × 58 cellules avec neuf salles, deux zones de levier éloignées, une passerelle centrale et une boucle de secours.
+- Objectif coopératif : le joueur active A pendant que l’Autre rejoint et maintient B après réception d’un signal explicite.
+- Solution de secours solo : B reste actif pendant 18 secondes, ce qui permet d’atteindre A par la boucle inférieure.
+- Voyants de passerelle, alcôve secrète, sauvegarde indépendante `otherPlayerChapter14SaveV2`, faits mémorisés et sortie de chapitre.
+- Le chapitre 14 est ajouté au menu de campagne et à la liste des prototypes jouables.
 
-## Mécaniques implémentées
-- Commande ouest activée par le joueur et levier est tenu par L’Autre après interaction/signal.
-- Trois paliers de passerelle, avec voyant rouge pendant la phase d’avertissement.
-- Solution de secours solo via la console centrale, après délai de sept secondes.
-- Cache facultative révélée après au moins deux paliers de coopération.
-- Sauvegarde dédiée au chapitre et marquage de fin dans la progression de campagne.
+## Vérifications réalisées
+- Syntaxe JavaScript contrôlée avec `node --check`.
+- Références locales des pages HTML contrôlées.
+- Connectivité de base du plan vérifiée par parcours de grille ; le levier B et la sortie sont accessibles via le détour inférieur lorsque le pont central est verrouillé.
+- Lancement en navigateur réel et test manuel des commandes non exécutés dans cet environnement.
 
-## Validation effectuée
-- Contrôle de syntaxe JavaScript via Node.js.
-- Contrôle des références d’éléments DOM utilisées dans le script.
-- Contrôle de connectivité de la carte, à portes ouvertes, par parcours de grille.
-- Contrôle d’intégrité de l’archive ZIP.
-
-## Limites restantes
-- Aucun test complet en navigateur réel n’est déclaré dans ce rapport.
-- La validation manuelle doit vérifier les commandes tactiles, les sauvegardes après rechargement, l’accès à la cache et les trois paliers en mode coopératif et solo.
-- Le comportement de L’Autre est déterministe dans ce prototype ; l’apprentissage plus riche de ses habitudes reste à développer dans les itérations suivantes.
+## Limites connues
+Les chapitres 15 à 36 restent à intégrer. Le chapitre 14 doit encore être essayé dans un navigateur pour confirmer les sensations de déplacement, les timings et le déblocage séquentiel avec les sauvegardes de campagne réelles.

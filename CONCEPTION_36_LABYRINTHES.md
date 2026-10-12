@@ -1,7 +1,7 @@
 # L’AUTRE JOUEUR V2.0 — Phase 01
 ## Conception des 36 labyrinthes
 
-**Statut : document de conception évolutif. Les chapitres 1 à 13 possèdent des prototypes séparés dans cette archive ; les chapitres 14 à 36 restent à intégrer. Le verrouillage séquentiel et une première cinématique de fin sont présents côté V2, mais la cinématique ne peut être atteinte normalement qu’une fois les 36 chapitres jouables.**
+**Statut : document de conception évolutif. Les chapitres 1 à 14 possèdent des prototypes séparés dans cette archive ; les chapitres 15 à 36 restent à intégrer. Le verrouillage séquentiel et une première cinématique de fin sont présents côté V2, mais la cinématique ne peut être atteinte normalement qu’une fois les 36 chapitres jouables.**
 
 Cette proposition conserve les 36 chapitres et leur ordre. Chaque chapitre garde son identité narrative et reçoit son propre labyrinthe, conçu à la main. Le projet ne devient pas un labyrinthe unique partagé par toute la campagne.
 

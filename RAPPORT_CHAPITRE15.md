@@ -1,14 +1,15 @@
-# Rapport de livraison — Chapitre 15 : PRÉDICTION
+# Rapport — Chapitre 15 : PRÉDICTION
 
-## Mécaniques du prototype
-- Labyrinthe déterministe distinct, avec trois balises de bifurcation.
-- L’Autre construit une prédiction simple à partir de la fréquence des choix gauche/droite mémorisés dans la sauvegarde du chapitre.
-- À chaque balise, le joueur peut lire le pari de L’Autre puis choisir une branche. Une branche différente déjoue la prédiction ; suivre la prédiction déclenche un avertissement et un bref ralentissement narratif, sans bloquer la route.
-- Une cache facultative s’ouvre après deux prédictions déjouées.
-- La progression du chapitre est sauvegardée indépendamment et le chapitre 15 est relié au menu de campagne.
+## Intention
+L’Autre formule une hypothèse à partir des habitudes observées, mais doit apprendre qu’une habitude n’est pas une certitude. Le joueur confronte trois indices puis peut contredire la route anticipée.
 
-## Vérifications
-- Contrôle syntaxique JavaScript avec Node.js.
-- Vérification des chemins locaux référencés dans le HTML.
-- Contrôle de connectivité de la grille et des points de départ/objectifs.
-- Pas de test complet dans un navigateur réel réalisé dans cette livraison ; les interactions doivent être validées en jeu avant de déclarer le chapitre terminé.
+## Éléments intégrés
+- Nouvelle page `v2-chapter15.html` et script `v2-chapter15.js`, avec sauvegarde propre au chapitre.
+- Trois vérifications d’indices enregistrées séparément.
+- Demander l’avis de l’Autre avant d’avoir consulté les trois indices ne donne pas accès à sa conclusion.
+- La fin distingue la résolution avec confrontation de l’hypothèse et la sortie sans l’avoir vérifiée.
+- Le chapitre 15 est ajouté à la liste des prototypes jouables et au compteur de campagne.
+- La V1 et les chapitres précédents sont conservés.
+
+## Contrôles
+Le contrôle de syntaxe JavaScript et des références locales est effectué à la préparation de l’archive. Le comportement doit encore être testé en navigateur réel, notamment les trois interactions avec le tableau et la progression séquentielle.
