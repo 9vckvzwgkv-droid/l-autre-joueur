@@ -39,7 +39,7 @@
     if(s.shelters>=3)s.gate=true;
   }
   function markComplete(){if(s.complete)return;s.complete=true;s.paused=true;remember('chapter18_complete','Les trois abris ont été activés et le joueur a rejoint la sortie avec l’Autre.');window.v2MarkCampaignChapterComplete?.(18);$('completeSummary').textContent=`Vous avez traversé le couloir en activant les trois abris. ${s.secret?'La cache facultative a aussi été découverte.':'La cache facultative reste à découvrir.'} L’Autre a retenu que tu l’as attendu avant de repartir.`;$('completeOverlay').classList.add('active');$('completeOverlay').setAttribute('aria-hidden','false');save();}
-  function interact(){if(s.paused||s.complete)return;const p=s.player;const ordered=Object.values(objects).sort((a,b)=>dist(p,a)-dist(p,b));const o=ordered.find(o=>near(p,o,2.4));if(!o){toast('Aucun abri ni repère à portée. Approche-toi d’une balise ou d’une alcôve.');return;}
+  function interact(){if(s.paused||s.complete)return;const p=s.player;const ordered=Object.values(objects).map(o=>o.kind==='other'?{...o,x:s.other.x,y:s.other.y}:o).sort((a,b)=>dist(p,a)-dist(p,b));const o=ordered.find(o=>near(p,o,2.4));if(!o){toast('Aucun abri ni repère à portée. Approche-toi d’une balise ou d’une alcôve.');return;}
     if(o.kind==='shelter1'||o.kind==='shelter2'||o.kind==='shelter3'){
       const n=Number(o.kind.slice(-1));if(n>s.shelters+1){toast(`L’abri ${s.shelters+1} doit être activé avant celui-ci. Suis l’ordre des refuges.`);return;}
       if(n<=s.shelters){toast(`Abri ${n} déjà sécurisé. Observe le cycle du faisceau avant de repartir.`);return;}

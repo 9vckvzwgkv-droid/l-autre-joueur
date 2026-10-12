@@ -27,7 +27,7 @@
     ['SILENCE', 'Résoudre une énigme par les formes, les ombres et les repères visuels.'],
     ['IDENTITÉ', 'Comparer deux moitiés du labyrinthe pour distinguer les marques de chacun.'],
     ['FRACTURE', 'Stabiliser deux points dans l’ordre indiqué par les lignes lumineuses.'],
-    ['DEUX SORTIES', 'Comprendre les conséquences de deux issues avant de choisir.'],
+    ['RÉSONANCE', 'Déclencher trois impulsions dans l’ordre et laisser L’Autre les reproduire après toi.'],
     ['SEUIL', 'Retrouver trois marques passées et rejoindre l’Autre au seuil.'],
     ['DISTORSION', 'Comparer les repères persistants à une géométrie déplacée.'],
     ['PORTES', 'Choisir une boucle parmi trois et retrouver le carrefour.'],
@@ -150,7 +150,7 @@
     saveCampaignProgress();
     return true;
   }
-  const playableCampaignChapters = new Set([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18]);
+  const playableCampaignChapters = new Set(Array.from({ length: 36 }, (_, i) => i + 1));
   function chapterUnlocked(number) {
     return number === 1 || completedCampaignChapters.includes(number) || completedCampaignChapters.includes(number - 1);
   }
@@ -173,7 +173,7 @@
     }).join('');
     const count = completedCampaignChapters.length;
     const next = nextCampaignChapter();
-    $('campaignProgress').textContent = `36 chapitres prévus · 18 prototypes intégrés · ${count}/36 terminés`;
+    $('campaignProgress').textContent = `36 chapitres prévus · 33 prototypes intégrés · ${count}/36 terminés`;
     $('campaignFinaleReplay').hidden = !campaignFullyComplete();
     $('campaignPlay').textContent = playableCampaignChapters.has(next)
       ? (completedCampaignChapters.includes(next) ? `REJOUER LE CHAPITRE ${next}` : `JOUER LE CHAPITRE ${next}`)
@@ -239,6 +239,24 @@
     else if (chapter === 16) location.href = 'v2-chapter16.html';
     else if (chapter === 17) location.href = 'v2-chapter17.html';
     else if (chapter === 18) location.href = 'v2-chapter18.html';
+    else if (chapter === 19) location.href = 'v2-chapter19.html';
+    else if (chapter === 20) location.href = 'v2-chapter20.html';
+    else if (chapter === 21) location.href = 'v2-chapter21.html';
+    else if (chapter === 22) location.href = 'v2-chapter22.html';
+    else if (chapter === 23) location.href = 'v2-chapter23.html';
+    else if (chapter === 24) location.href = 'v2-chapter24.html';
+    else if (chapter === 25) location.href = 'v2-chapter25.html';
+    else if (chapter === 26) location.href = 'v2-chapter26.html';
+    else if (chapter === 27) location.href = 'v2-chapter27.html';
+    else if (chapter === 28) location.href = 'v2-chapter28.html';
+    else if (chapter === 29) location.href = 'v2-chapter29.html';
+    else if (chapter === 30) location.href = 'v2-chapter30.html';
+    else if (chapter === 31) location.href = 'v2-chapter31.html';
+    else if (chapter === 32) location.href = 'v2-chapter32.html';
+    else if (chapter === 33) location.href = 'v2-chapter33.html';
+    else if (chapter === 34) location.href = 'v2-chapter34.html';
+    else if (chapter === 35) location.href = 'v2-chapter35.html';
+    else if (chapter === 36) location.href = 'v2-chapter36.html';
   }
   function playCampaignPrototype() {
     const chapter = nextCampaignChapter();
